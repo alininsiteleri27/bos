@@ -18,10 +18,22 @@ function ara() {
   const girilen = document.getElementById("arama").value;
   let sonuc = "Sonuç bulunamadı";
 
-  if (girilen === "x") {
-    sonuc = "y";
+  if (girilen === "ümeyir") {
+    sonuc = "bonustu kel oldu";
   }
-
+if (girilen === "berke") {
+    sonuc = "klonlandı";
+  } if (girilen === "cilo") {
+    sonuc = "mersinci oldu";
+  } if (girilen === "ali") {
+    sonuc = "küpraya aşık";
+  } if (girilen === "melo") {
+    sonuc = "keçiydi hala keçi";
+  } if (girilen === "hashüs") {
+    sonuc = "inek ama mal inek";
+  } if (girilen === "x") {
+    sonuc = "y";
+  } 
   document.getElementById("sonuc").innerText = sonuc;
 }
 </script>
