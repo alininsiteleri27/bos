@@ -1,17 +1,19 @@
 /* ===============================
-   🔥 11/A • DARK LEGEND THEME
+   11/A • DARK CLEAN ELITE THEME
    =============================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
 :root {
-  --bg-main: #05060d;
-  --bg-glass: rgba(255, 255, 255, 0.08);
-  --neon-blue: #00f2ff;
-  --neon-purple: #7a5cff;
-  --neon-red: #ff3b3b;
-  --text-main: #f1f1ff;
-  --text-muted: #9fa3c7;
+  --bg-main: #070812;
+  --bg-soft: rgba(255,255,255,0.06);
+  --border-soft: rgba(255,255,255,0.12);
+
+  --accent: #4fd1ff;
+  --accent-soft: rgba(79,209,255,0.35);
+
+  --text-main: #e9ecff;
+  --text-muted: #9aa0c3;
 }
 
 /* ========== RESET ========== */
@@ -19,7 +21,6 @@
   box-sizing: border-box;
 }
 
-/* ========== BODY / ARKA PLAN ========== */
 body {
   margin: 0;
   min-height: 100vh;
@@ -32,58 +33,67 @@ body {
   justify-content: center;
 
   background:
-    radial-gradient(circle at 15% 20%, rgba(0,242,255,0.12), transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(122,92,255,0.12), transparent 45%),
-    linear-gradient(135deg, #020024, #070a2b, #000000);
+    radial-gradient(circle at top, rgba(79,209,255,0.08), transparent 40%),
+    linear-gradient(180deg, #05060d, #090b1f);
 
-  background-attachment: fixed;
   overflow-x: hidden;
 }
 
-/* ========== ARKA PLAN YAZI EFEKTİ ========== */
+/* ========== ARKA PLAN YAZI (ÇOK HAFİF) ========== */
 body::before {
-  content: "11/A • ÖZEL SİSTEM";
+  content: "11/A";
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 60px;
-  letter-spacing: 10px;
-  color: rgba(255,255,255,0.035);
+  bottom: 20px;
+  right: 25px;
+  font-size: 80px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.03);
+  letter-spacing: 8px;
   pointer-events: none;
-  user-select: none;
+}
+
+/* ===============================
+   ANA UYGULAMA ALANI
+   =============================== */
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* ========== ARAMA KUTUSU ========== */
 .search-box {
   display: flex;
-  gap: 10px;
-  padding: 22px 24px;
+  gap: 12px;
+  padding: 20px;
 
-  background: var(--bg-glass);
-  backdrop-filter: blur(14px);
-  border-radius: 18px;
+  background: var(--bg-soft);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
 
-  box-shadow:
-    0 0 30px rgba(0,242,255,0.15),
-    inset 0 0 20px rgba(255,255,255,0.05);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  transition: transform 0.3s ease;
+}
 
-  animation: floatBox 6s ease-in-out infinite;
+.search-box:hover {
+  transform: translateY(-2px);
 }
 
 /* ========== INPUT ========== */
 .fear-search {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid var(--border-soft);
   border-radius: 12px;
 
-  padding: 12px 16px;
-  font-size: 16px;
-  color: var(--text-main);
+  padding: 12px 14px;
   width: 220px;
 
+  font-size: 15px;
+  color: var(--text-main);
   outline: none;
-  transition: all 0.3s ease;
+
+  transition: border 0.25s ease, box-shadow 0.25s ease;
 }
 
 .fear-search::placeholder {
@@ -91,77 +101,97 @@ body::before {
 }
 
 .fear-search:focus {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 15px rgba(0,242,255,0.6);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 /* ========== BUTTON ========== */
 #searchBtn {
-  background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
   border: none;
   border-radius: 12px;
+  padding: 12px 20px;
 
-  padding: 12px 22px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  color: #000;
   cursor: pointer;
 
-  box-shadow: 0 0 20px rgba(0,242,255,0.5);
-  transition: all 0.3s ease;
+  color: #02040a;
+  background: linear-gradient(135deg, #4fd1ff, #6aa8ff);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 #searchBtn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 0 35px rgba(122,92,255,0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(79,209,255,0.45);
 }
 
-/* ========== SONUÇ YAZISI ========== */
+/* ========== SONUÇ ========== */
 #sonuc {
-  margin-top: 25px;
-  font-size: 20px;
-  letter-spacing: 1px;
-  text-shadow: 0 0 10px rgba(0,242,255,0.4);
+  margin-top: 22px;
+  min-height: 24px;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  color: var(--text-main);
+  opacity: 0;
+  animation: fadeUp 0.35s ease forwards;
+}
+
+/* ========== FOTO ========== */
+#sonucFoto {
+  margin-top: 18px;
 }
 
 /* ========== FOOTER ========== */
 .site-footer {
   position: fixed;
-  bottom: 15px;
+  bottom: 12px;
   text-align: center;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
-.site-footer span {
-  color: var(--neon-blue);
+.site-footer .class-name {
+  margin-bottom: 4px;
 }
 
-/* ========== ANİMASYONLAR ========== */
-@keyframes floatBox {
-  0%, 100% {
+.site-footer span {
+  color: var(--accent);
+}
+
+.site-footer .socials a {
+  margin: 0 6px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.site-footer .socials a:hover {
+  color: var(--accent);
+}
+
+/* ===============================
+   ANİMASYONLAR
+   =============================== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(-6px);
-  }
 }
 
-/* ========== FEAR MODE (ARA BULUNCA) ========== */
+/* ========== FEAR MODE (ÇOK HAFİF) ========== */
 body.fear-mode {
-  animation: fearFlash 0.3s ease;
+  animation: flash 0.25s ease;
 }
 
-@keyframes fearFlash {
-  0% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.4);
-  }
-  100% {
-    filter: brightness(1);
-  }
+@keyframes flash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.15); }
+  100% { filter: brightness(1); }
 }
-
-
