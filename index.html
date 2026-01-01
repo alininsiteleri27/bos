@@ -8,8 +8,14 @@
   <!-- STYLE -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- FOTO ANİMASYONU -->
+  <!-- EK STİLLER -->
   <style>
+    body {
+      background:
+        linear-gradient(rgba(5,15,20,0.85), rgba(5,15,20,0.85)),
+        url("images/shelby.jpg") center / cover no-repeat fixed;
+    }
+
     #sonucFoto {
       opacity: 0;
       transform: scale(0.85);
@@ -18,6 +24,18 @@
     #sonucFoto.show {
       opacity: 1;
       transform: scale(1);
+    }
+
+    /* 🔥 YAPIMCI YAZISI */
+    .producer {
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #4fd1ff;
+      text-shadow:
+        0 0 10px rgba(79,209,255,0.8),
+        0 0 25px rgba(79,209,255,0.6);
     }
   </style>
 </head>
@@ -30,14 +48,11 @@
   const input = prompt("Şifreyi girin:");
   if (input !== password) {
     document.body.innerHTML =
-      "<h2 style='color:white;text-align:center;margin-top:40vh'>Erişim reddedildi</h2>";
+      "<h2 style='color:white;text-align:center;margin-top:40vh'>ERİŞİM REDDEDİLDİ</h2>";
     throw new Error("Yetkisiz giriş");
   }
 </script>
 
-<!-- ===================== -->
-<!-- 🔍 ANA UYGULAMA -->
-<!-- ===================== -->
 <main class="app">
 
   <div class="search-box">
@@ -65,15 +80,12 @@
     "
   >
 
-  <!-- ===================== -->
   <!-- 🧱 SOSYAL PANEL -->
-  <!-- ===================== -->
   <section class="info-panel">
 
     <div class="panel-title">11/A • BAĞLANTILAR</div>
 
     <div class="panel-grid">
-      <!-- INSTAGRAM -->
       <a
         href="https://www.instagram.com/meali.kcgln?igsh=MWR2dzc1OXNlMzdjNQ=="
         target="_blank"
@@ -82,7 +94,6 @@
         Instagram
       </a>
 
-      <!-- GITHUB -->
       <a
         href="https://github.com/alininsiteleri27"
         target="_blank"
@@ -92,16 +103,8 @@
       </a>
     </div>
 
-    <div class="panel-footer">
-      Yapımcı:
-      <a
-        href="https://www.instagram.com/meali.kcgln?igsh=MWR2dzc1OXNlMzdjNQ=="
-        target="_blank"
-        style="color:var(--accent);text-decoration:none;font-weight:600"
-      >
-        11/A Tech Crew
-      </a>
-    </div>
+    <!-- 🔥 YAPIMCI -->
+    <div class="producer">KCGNL ALI</div>
 
   </section>
 
@@ -111,9 +114,7 @@
 <audio id="successSound" src="sounds/success.mp3"></audio>
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
-<!-- ===================== -->
 <!-- 🧠 SCRIPT -->
-<!-- ===================== -->
 <script>
   const searchInput = document.getElementById("arama");
   const searchBtn = document.getElementById("searchBtn");
