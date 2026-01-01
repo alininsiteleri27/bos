@@ -46,4 +46,40 @@ body {
 .search-box button:hover {
   transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(0, 114, 255, 0.6);
+}  
+/* Sonuç animasyonu */
+#sonuc {
+  margin-top: 20px;
+  font-size: 18px;
+  color: white;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
 }
+
+/* Aktif olunca */
+#sonuc.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hata animasyonu */
+#sonuc.error {
+  color: #ff4d4d;
+  animation: shake 0.3s;
+}
+
+/* Doğru sonuç animasyonu */
+#sonuc.success {
+  color: #00ffcc;
+}
+
+/* Shake efekti */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
