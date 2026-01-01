@@ -73,21 +73,34 @@
     <div class="panel-title">11/A • BAĞLANTILAR</div>
 
     <div class="panel-grid">
-      <a href="https://instagram.com/" target="_blank" class="panel-item ig">
+      <!-- INSTAGRAM -->
+      <a
+        href="https://www.instagram.com/meali.kcgln?igsh=MWR2dzc1OXNlMzdjNQ=="
+        target="_blank"
+        class="panel-item ig"
+      >
         Instagram
       </a>
 
-      <a href="https://tiktok.com/" target="_blank" class="panel-item tt">
-        TikTok
-      </a>
-
-      <a href="https://github.com/" target="_blank" class="panel-item gh">
+      <!-- GITHUB -->
+      <a
+        href="https://github.com/alininsiteleri27"
+        target="_blank"
+        class="panel-item gh"
+      >
         GitHub
       </a>
     </div>
 
     <div class="panel-footer">
-      Yapımcı: <span>11/A Tech Crew</span>
+      Yapımcı:
+      <a
+        href="https://www.instagram.com/meali.kcgln?igsh=MWR2dzc1OXNlMzdjNQ=="
+        target="_blank"
+        style="color:var(--accent);text-decoration:none;font-weight:600"
+      >
+        11/A Tech Crew
+      </a>
     </div>
 
   </section>
@@ -110,7 +123,6 @@
   const successSound = document.getElementById("successSound");
   const errorSound = document.getElementById("errorSound");
 
-  // ❗ VERİLER AYNEN KORUNDU
   const kisiler = {
     kupra: { mesaj: "hafif", foto: "fotos/kupra.jpg" },
     yusuf: { mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
@@ -157,7 +169,6 @@
         fotoEl.style.display = "block";
         fotoEl.classList.add("show");
       }, 200);
-
     } else {
       sonucEl.textContent = "Sonuç bulunamadı";
       errorSound.currentTime = 0;
