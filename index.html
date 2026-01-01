@@ -33,26 +33,30 @@
 <script>
   const searchInput = document.getElementById("arama");
   const searchBtn = document.getElementById("searchBtn");
+  const fotoEl = document.getElementById("sonucFoto");
 
-  // 👥 KİŞİ VERİLERİ (BURAYA 30 KİŞİ EKLERSİN)
   const kisiler = {
-    "burhan": {
+    burhan: {
       mesaj: "maraş fedaisi",
       foto: "fotos/burhan.jpg"
     },
-    "yusuf": {
+    yusuf: {
       mesaj: "malatyalı escort",
       foto: "fotos/yusuf.jpg"
     },
-    "enes": {
+    kupra: {
+      mesaj: "küpra ❤️",
+      foto: "fotos/kupra.jpg"
+    },
+    enes: {
       mesaj: "kkaahhppee",
       foto: "fotos/enes.jpg"
     },
-    "ayhan": {
+    ayhan: {
       mesaj: "gergin görünen adam",
       foto: "fotos/ayhan.jpg"
     },
-    "dilber": {
+    dilber: {
       mesaj: "malatyalı escort",
       foto: "fotos/dilber.jpg"
     }
@@ -61,10 +65,10 @@
   function ara() {
     const girilen = searchInput.value.toLowerCase().trim();
     const sonucEl = document.getElementById("sonuc");
-    const fotoEl = document.getElementById("sonucFoto");
 
     sonucEl.className = "";
     fotoEl.style.display = "none";
+    fotoEl.src = "";
 
     if (kisiler[girilen]) {
       sonucEl.textContent = kisiler[girilen].mesaj;
@@ -82,7 +86,6 @@
     }
   }
 
-  // ENTER ile ara
   searchInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -90,7 +93,6 @@
     }
   });
 
-  // Buton ile ara
   searchBtn.addEventListener("click", ara);
 </script>
 
