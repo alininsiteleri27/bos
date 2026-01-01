@@ -5,6 +5,20 @@
   <title>Basit Arama Paneli</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
+  <!-- FOTO ANİMASYONU -->
+  <style>
+    #sonucFoto {
+      opacity: 0;
+      transform: scale(0.7) rotate(-5deg);
+      transition: all 0.5s ease;
+    }
+
+    #sonucFoto.show {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  </style>
 </head>
 <body>
 
@@ -23,76 +37,4 @@
 </div>
 
 <p id="sonuc"></p>
-<img id="sonucFoto" style="display:none; max-width:250px; margin-top:20px;">
-
-<script>
-  const searchInput = document.getElementById("arama");
-  const searchBtn = document.getElementById("searchBtn");
-  const fotoEl = document.getElementById("sonucFoto");
-
-  const kisiler = {
-    kupra: { mesaj: "hafif", foto: "fotos/kupra.jpg" },
-    yusuf: { mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
-    beyza: { mesaj: "egoist sıçan", foto: "fotos/beyza.jpg" },
-    enes: { mesaj: "kkaahhppee", foto: "fotos/enes.jpg" },
-    hira: { mesaj: "beyinsiz", foto: "fotos/hira.jpg" },
-    hacer: { mesaj: "erkek", foto: "fotos/hacer.jpg" },
-    deniz: { mesaj: "sınıfın taklitmanı", foto: "fotos/deniz.jpg" },
-    efe: { mesaj: "yaşıyor", foto: "fotos/efe.jpg" },
-    ayhan: { mesaj: "gergin görünen adam", foto: "fotos/ayhan.jpg" },
-    dilber: { mesaj: "şevvalin50tonu", foto: "fotos/dilber.jpg" },
-    samset: { mesaj: "başkan", foto: "fotos/samset.jpg" },
-    ipek: { mesaj: "gergedan", foto: "fotos/ipek.jpg" },
-    esma: { mesaj: "umrede", foto: "fotos/esma.jpg" },
-    sude: { mesaj: "gözlük yokki", foto: "fotos/sude.jpg" },
-    cehennet: { mesaj: "depremci", foto: "fotos/cehennet.jpg" },
-    berke: { mesaj: "kas kütlesi", foto: "fotos/berke.jpg" },
-    eminbabapiro: { mesaj: "atatürk", foto: "fotos/emin.jpg" },
-    hashus: { mesaj: "ineğin kalçası", foto: "fotos/hashus.jpg" },
-    bunyamin: { mesaj: "bilekkıran", foto: "fotos/bunyamin.jpg" },
-    efsa: { mesaj: "başkaniye", foto: "fotos/efsa.jpg" },
-    merve: { mesaj: "efsanın elli tonu", foto: "fotos/merve.jpg" },
-    cilo: { mesaj: "efsanın elli tonu", foto: "fotos/cilo.jpg" }
-  };
-
-  function ara() {
-    const girilen = searchInput.value.toLowerCase().trim();
-    const sonucEl = document.getElementById("sonuc");
-
-    sonucEl.className = "";
-    fotoEl.style.display = "none";
-    fotoEl.src = "";
-    fotoEl.classList.remove("show");
-
-    if (kisiler[girilen]) {
-      sonucEl.textContent = kisiler[girilen].mesaj;
-      fotoEl.src = kisiler[girilen].foto;
-
-      setTimeout(() => {
-        fotoEl.style.display = "block";
-        fotoEl.classList.add("show");
-      }, 300);
-
-      setTimeout(() => {
-        sonucEl.classList.add("show", "success");
-      }, 50);
-    } else {
-      sonucEl.textContent = "Sonuç bulunamadı";
-      setTimeout(() => {
-        sonucEl.classList.add("show", "error");
-      }, 50);
-    }
-  }
-
-  searchInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      ara();
-    }
-  });
-
-  searchBtn.addEventListener("click", ara);
-</script>
-
-</body>
-</html>
+<img id="sonucFoto" style="displ
