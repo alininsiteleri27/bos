@@ -22,6 +22,7 @@
 </head>
 <body>
 
+<!-- 🔐 ŞİFRE KORUMASI -->
 <script>
   const password = "2644";
   const input = prompt("Şifreyi girin:");
@@ -31,8 +32,14 @@
   }
 </script>
 
+<!-- 🔍 ARAMA -->
 <div class="search-box">
-  <input type="search" id="arama" class="fear-search" placeholder="Bir şey yaz">
+  <input
+    type="search"
+    id="arama"
+    class="fear-search"
+    placeholder="Bir şey yaz"
+  >
   <button id="searchBtn">Ara</button>
 </div>
 
@@ -40,4 +47,107 @@
 
 <img
   id="sonucFoto"
-  styl
+  style="
+    display:none;
+    max-width:260px;
+    margin-top:20px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+  "
+>
+
+<!-- 🔊 SESLER -->
+<audio id="successSound" src="sounds/success.mp3"></audio>
+<audio id="errorSound" src="sounds/error.mp3"></audio>
+
+<!-- 🔻 FOOTER -->
+<footer class="site-footer">
+  <div class="class-name">11/A SINIFI • ÖZEL ARAMA SİSTEMİ</div>
+  <div class="socials">
+    <a href="#">Instagram</a>
+    <a href="#">TikTok</a>
+    <a href="#">GitHub</a>
+  </div>
+  <div class="credit">Yapımcı: <span>11/A Tech Crew</span></div>
+</footer>
+
+<!-- 🧠 SCRIPT -->
+<script>
+  const searchInput = document.getElementById("arama");
+  const searchBtn = document.getElementById("searchBtn");
+  const sonucEl = document.getElementById("sonuc");
+  const fotoEl = document.getElementById("sonucFoto");
+
+  const successSound = document.getElementById("successSound");
+  const errorSound = document.getElementById("errorSound");
+
+  const kisiler = {
+    kupra: { mesaj: "hafif", foto: "fotos/kupra.jpg" },
+    yusuf: { mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
+    beyza: { mesaj: "egoist sıçan", foto: "fotos/beyza.jpg" },
+    enes: { mesaj: "kkaahhppee", foto: "fotos/enes.jpg" },
+    hira: { mesaj: "beyinsiz", foto: "fotos/hira.jpg" },
+    hacer: { mesaj: "erkek", foto: "fotos/hacer.jpg" },
+    deniz: { mesaj: "sınıfın taklitmanı", foto: "fotos/deniz.jpg" },
+    efe: { mesaj: "yaşıyor", foto: "fotos/efe.jpg" },
+    ayhan: { mesaj: "gergin görünen adam", foto: "fotos/ayhan.jpg" },
+    dilber: { mesaj: "şevvalin50tonu", foto: "fotos/dilber.jpg" },
+    samset: { mesaj: "başkan", foto: "fotos/samset.jpg" },
+    ipek: { mesaj: "gergedan", foto: "fotos/ipek.jpg" },
+    esma: { mesaj: "umrede", foto: "fotos/esma.jpg" },
+    sude: { mesaj: "gözlük yokki", foto: "fotos/sude.jpg" },
+    cehennet: { mesaj: "depremci", foto: "fotos/cehennet.jpg" },
+    berke: { mesaj: "kas kütlesi", foto: "fotos/berke.jpg" },
+    eminbabapiro: { mesaj: "atatürk", foto: "fotos/emin.jpg" },
+    hashus: { mesaj: "ineğin kalçası", foto: "fotos/hashus.jpg" },
+    bunyamin: { mesaj: "bilekkıran", foto: "fotos/bunyamin.jpg" },
+    efsa: { mesaj: "başkaniye", foto: "fotos/efsa.jpg" },
+    merve: { mesaj: "efsanın elli tonu", foto: "fotos/merve.jpg" },
+    cilo: { mesaj: "efsanın elli tonu", foto: "fotos/cilo.jpg" }
+  };
+
+  function ara() {
+    const girilen = searchInput.value.toLowerCase().trim();
+
+    sonucEl.className = "";
+    fotoEl.style.display = "none";
+    fotoEl.src = "";
+    fotoEl.classList.remove("show");
+
+    if (!girilen) return;
+
+    if (kisiler[girilen]) {
+      const kisi = kisiler[girilen];
+
+      sonucEl.textContent = kisi.mesaj;
+
+      successSound.currentTime = 0;
+      successSound.play();
+
+      setTimeout(() => {
+        fotoEl.src = kisi.foto;
+        fotoEl.style.display = "block";
+        fotoEl.classList.add("show");
+      }, 300);
+
+    } else {
+      sonucEl.textContent = "Sonuç bulunamadı";
+      errorSound.currentTime = 0;
+      errorSound.play();
+    }
+  }
+
+  // 🔘 BUTON
+  searchBtn.addEventListener("click", ara);
+
+  // ⌨️ ENTER
+  searchInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      ara();
+    }
+  });
+</script>
+
+</body>
+</html>
