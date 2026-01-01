@@ -1,10 +1,3 @@
-<script>
-  const password = "689"; // burayı değiştir
-  const input = prompt("Şifreyi girin:");
-  if (input !== password) {
-    document.body.innerHTML = "Erişim reddedildi";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -14,68 +7,75 @@
 </head>
 <body>
 
-  <div class="search-box">
-    <input type="text" id="arama" placeholder="Bir şey yaz">
-    <button onclick="ara()">Ara</button>
-  </div>
+<script>
+  const password = "689"; // şifre
+  const input = prompt("Şifreyi girin:");
+  if (input !== password) {
+    document.body.innerHTML = "Erişim reddedildi";
+    throw new Error("Yetkisiz giriş");
+  }
+</script>
 
-  <p id="sonuc"></p>
+<div class="search-box">
+  <input 
+    type="search" 
+    id="arama" 
+    class="fear-search"
+    placeholder="Bir şey yaz"
+  >
+  <button id="searchBtn">Ara</button>
+</div>
+
+<p id="sonuc"></p>
 
 <script>
-function ara() {
-  const girilen = document.getElementById("arama").value.toLowerCase();
-  const sonucEl = document.getElementById("sonuc");
+  const searchInput = document.getElementById("arama");
+  const searchBtn = document.getElementById("searchBtn");
 
-  sonucEl.className = ""; // eski animasyonları sıfırla
+  function ara() {
+    const girilen = searchInput.value.toLowerCase();
+    const sonucEl = document.getElementById("sonuc");
 
-  let sonuc = "Sonuç bulunamadı";
-  let durum = "error";
+    sonucEl.className = "";
 
-  if (girilen === "ümeyir") {
-    sonuc = "bonustu kel oldu";
-    durum = "success";
-  } else if (girilen === "berke") {
-    sonuc = "klonlandı";
-    durum = "success";
-  } else if (girilen === "cilo") {
-    sonuc = "mersinci oldu";
-    durum = "success";
-  } else if (girilen === "ali") {
-    sonuc = "küpraya aşık";
-    durum = "success";
-  } else if (girilen === "melo") {
-    sonuc = "keçiydi hala keçi";
-    durum = "success";
+    let sonuc = "Sonuç bulunamadı";
+    let durum = "error";
+
+    if (girilen === "ümeyir") {
+      sonuc = "bonustu kel oldu";
+      durum = "success";
+    } else if (girilen === "berke") {
+      sonuc = "klonlandı";
+      durum = "success";
+    } else if (girilen === "cilo") {
+      sonuc = "mersinci oldu";
+      durum = "success";
+    } else if (girilen === "ali") {
+      sonuc = "küpraya aşık";
+      durum = "success";
+    } else if (girilen === "melo") {
+      sonuc = "keçiydi hala keçi";
+      durum = "success";
+    }
+
+    sonucEl.textContent = sonuc;
+
+    setTimeout(() => {
+      sonucEl.classList.add("show", durum);
+    }, 50);
   }
 
-  sonucEl.textContent = sonuc;
+  // ENTER ile ara
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      ara();
+    }
+  });
 
-  // animasyonu tetikle
-  setTimeout(() => {
-    sonucEl.classList.add("show", durum);
-  }, 50);
-}
+  // Butonla ara
+  searchBtn.addEventListener("click", ara);
 </script>
 
 </body>
 </html>
-<input type="search" placeholder="Bir şey ara..." class="fear-search">
-<input type="search" id="searchInput" class="fear-search" placeholder="Bir şey ara...">
-<button id="searchBtn">Ara</button>
-<script>
-  const searchInput = document.getElementById("searchInput");
-  const searchBtn = document.getElementById("searchBtn");
-
-  searchInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault(); // form varsa submiti engeller
-      searchBtn.click();  // otomatik ara
-    }
-  });
-
-  searchBtn.addEventListener("click", () => {
-    console.log("ARANIYOR...");
-    // buraya arama kodunu yazarsın
-  });
-</script>
-
