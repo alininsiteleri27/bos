@@ -8,7 +8,7 @@
 <body>
 
 <script>
-  const password = "689"; // şifre
+  const password = "689";
   const input = prompt("Şifreyi girin:");
   if (input !== password) {
     document.body.innerHTML = "Erişim reddedildi";
@@ -17,9 +17,9 @@
 </script>
 
 <div class="search-box">
-  <input 
-    type="search" 
-    id="arama" 
+  <input
+    type="search"
+    id="arama"
     class="fear-search"
     placeholder="Bir şey yaz"
   >
@@ -66,14 +66,14 @@
   }
 
   // ENTER ile ara
-  searchInput.addEventListener("keydown", function (e) {
+  searchInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
       e.preventDefault();
       ara();
     }
   });
 
-  // Butonla ara
+  // Buton ile ara
   searchBtn.addEventListener("click", ara);
 </script>
 
