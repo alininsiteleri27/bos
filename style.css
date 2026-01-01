@@ -1,125 +1,19 @@
-/* Genel ayarlar */
+/* ========== GENEL AYARLAR ========== */
 body {
+  margin: 0;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   font-family: Arial, Helvetica, sans-serif;
-  height: 100vh;
+  min-height: 100vh;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-/* Arama kutusu kapsayıcı */
+/* ========== ARAMA KUTUSU ========== */
 .search-box {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   padding: 20px;
-  border-radius: 15px;
-  display: flex;
-  gap: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* Input */
-.search-box input {
-  width: 260px;
-  padding: 12px 15px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  background: rgba(255, 255, 255, 0.9);
-}
-
-/* Button */
-.search-box button {
-  padding: 12px 20px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  background: #00c6ff;
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  color: #fff;
-  transition: 0.3s ease;
-}
-
-.search-box button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0, 114, 255, 0.6);
-}  
-/* Sonuç animasyonu */
-#sonuc {
-  margin-top: 20px;
-  font-size: 18px;
-  color: white;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.4s ease;
-}
-
-/* Aktif olunca */
-#sonuc.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Hata animasyonu */
-#sonuc.error {
-  color: #ff4d4d;
-  animation: shake 0.3s;
-}
-
-/* Doğru sonuç animasyonu */
-#sonuc.success {
-  color: #00ffcc;
-}
-
-/* Shake efekti */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
-}
-body.fear-mode {
-  animation: screenPulse 0.6s infinite alternate;
-  background-color: #000;
-}
-
-.fear-search {
-  padding: 12px;
-  font-size: 18px;
-  border: 2px solid #555;
-  background: #111;
-  color: red;
-} 
-.search-box {
-  display: flex;
-  gap: 10px;
-}
-
-@media (max-width: 600px) {
-  .search-box {
-    flex-direction: column;
-  }
-
-  .fear-search,
-  #searchBtn {
-    width: 100%;
-    font-size: 18px;
-    padding: 14px;
-  }
-
-  #sonuc {
-    font-size: 20px;
-    text-align: center;
-  }
-}
-
-
-.fear-search:focus {
-  animation: shake 0.1s infinite;
-  box-shadow: 0 0 20px red;
-}
-
+  border-
