@@ -8,14 +8,13 @@
   <!-- STYLE -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- FOTO ANİMASYONU (MINIMAL) -->
+  <!-- FOTO ANİMASYONU -->
   <style>
     #sonucFoto {
       opacity: 0;
       transform: scale(0.85);
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
-
     #sonucFoto.show {
       opacity: 1;
       transform: scale(1);
@@ -25,18 +24,19 @@
 
 <body>
 
-<!-- 🔐 ŞİFRE KORUMA -->
+<!-- 🔐 ŞİFRE -->
 <script>
   const password = "2644";
   const input = prompt("Şifreyi girin:");
   if (input !== password) {
-    document.body.innerHTML = "<h2 style='color:white;text-align:center'>Erişim reddedildi</h2>";
+    document.body.innerHTML =
+      "<h2 style='color:white;text-align:center;margin-top:40vh'>Erişim reddedildi</h2>";
     throw new Error("Yetkisiz giriş");
   }
 </script>
 
 <!-- ===================== -->
-<!-- 🔍 ANA ARAMA ALANI -->
+<!-- 🔍 ANA UYGULAMA -->
 <!-- ===================== -->
 <main class="app">
 
@@ -65,28 +65,38 @@
     "
   >
 
+  <!-- ===================== -->
+  <!-- 🧱 SOSYAL PANEL -->
+  <!-- ===================== -->
+  <section class="info-panel">
+
+    <div class="panel-title">11/A • BAĞLANTILAR</div>
+
+    <div class="panel-grid">
+      <a href="https://instagram.com/" target="_blank" class="panel-item ig">
+        Instagram
+      </a>
+
+      <a href="https://tiktok.com/" target="_blank" class="panel-item tt">
+        TikTok
+      </a>
+
+      <a href="https://github.com/" target="_blank" class="panel-item gh">
+        GitHub
+      </a>
+    </div>
+
+    <div class="panel-footer">
+      Yapımcı: <span>11/A Tech Crew</span>
+    </div>
+
+  </section>
+
 </main>
 
 <!-- 🔊 SESLER -->
 <audio id="successSound" src="sounds/success.mp3"></audio>
 <audio id="errorSound" src="sounds/error.mp3"></audio>
-
-<!-- ===================== -->
-<!-- 🔻 FOOTER -->
-<!-- ===================== -->
-<footer class="site-footer">
-  <div class="class-name">11/A SINIFI • ÖZEL ARAMA SİSTEMİ</div>
-
-  <div class="socials">
-    <a href="#">Instagram</a>
-    <a href="#">TikTok</a>
-    <a href="#">GitHub</a>
-  </div>
-
-  <div class="credit">
-    Yapımcı: <span>11/A Tech Crew</span>
-  </div>
-</footer>
 
 <!-- ===================== -->
 <!-- 🧠 SCRIPT -->
@@ -100,7 +110,7 @@
   const successSound = document.getElementById("successSound");
   const errorSound = document.getElementById("errorSound");
 
-  // ⚠️ VERİLER AYNI
+  // ❗ VERİLER AYNEN KORUNDU
   const kisiler = {
     kupra: { mesaj: "hafif", foto: "fotos/kupra.jpg" },
     yusuf: { mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
@@ -138,7 +148,6 @@
 
     if (kisiler[girilen]) {
       const kisi = kisiler[girilen];
-
       sonucEl.textContent = kisi.mesaj;
       successSound.currentTime = 0;
       successSound.play();
@@ -157,7 +166,6 @@
   }
 
   searchBtn.addEventListener("click", ara);
-
   searchInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
       e.preventDefault();
