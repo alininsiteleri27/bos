@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Basit Arama Paneli</title>
+</head>
+<body>
+
+<h2>Arama Paneli</h2>
+
+<input type="text" id="arama" placeholder="Bir şey yaz">
+<button onclick="ara()">Ara</button>
+
+<p id="sonuc"></p>
+
+<script>
+function ara() {
+  const girilen = document.getElementById("arama").value;
+  let sonuc = "Sonuç bulunamadı";
+
+  if (girilen === "x") {
+    sonuc = "y";
+  }
+
+  document.getElementById("sonuc").innerText = sonuc;
+}
+</script>
+
+</body>
+</html>
