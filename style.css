@@ -138,4 +138,23 @@ body {
 .site-footer .socials a:hover {
   text-decoration: underline;
 }
+/* ===============================
+   🔻 FOOTER – BLOCK / CARD STYLE
+   =============================== */
+
+.site-footer {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* SINIF ADI BLOĞU */
+.site-footer .class-name {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255,255,
+
 
