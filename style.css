@@ -82,4 +82,21 @@ body {
   75% { transform: translateX(-5px); }
   100% { transform: translateX(0); }
 }
+body.fear-mode {
+  animation: screenPulse 0.6s infinite alternate;
+  background-color: #000;
+}
+
+.fear-search {
+  padding: 12px;
+  font-size: 18px;
+  border: 2px solid #555;
+  background: #111;
+  color: red;
+}
+
+.fear-search:focus {
+  animation: shake 0.1s infinite;
+  box-shadow: 0 0 20px red;
+}
 
