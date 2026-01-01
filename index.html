@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Basit Arama Paneli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,37 +28,58 @@
 </div>
 
 <p id="sonuc"></p>
+<img id="sonucFoto" style="display:none; max-width:250px; margin-top:20px;">
 
 <script>
   const searchInput = document.getElementById("arama");
   const searchBtn = document.getElementById("searchBtn");
 
+  // 👥 KİŞİ VERİLERİ (BURAYA 30 KİŞİ EKLERSİN)
+  const kisiler = {
+    "burhan": {
+      mesaj: "maraş fedaisi",
+      foto: "fotos/burhan.jpg"
+    },
+    "yusuf": {
+      mesaj: "malatyalı escort",
+      foto: "fotos/yusuf.jpg"
+    },
+    "enes": {
+      mesaj: "kkaahhppee",
+      foto: "fotos/enes.jpg"
+    },
+    "ayhan": {
+      mesaj: "gergin görünen adam",
+      foto: "fotos/ayhan.jpg"
+    },
+    "dilber": {
+      mesaj: "malatyalı escort",
+      foto: "fotos/dilber.jpg"
+    }
+  };
+
   function ara() {
-    const girilen = searchInput.value.toLowerCase();
+    const girilen = searchInput.value.toLowerCase().trim();
     const sonucEl = document.getElementById("sonuc");
+    const fotoEl = document.getElementById("sonucFoto");
 
     sonucEl.className = "";
+    fotoEl.style.display = "none";
 
-    let sonuc = "Sonuç bulunamadı";
-    let durum = "error";
+    if (kisiler[girilen]) {
+      sonucEl.textContent = kisiler[girilen].mesaj;
+      fotoEl.src = kisiler[girilen].foto;
+      fotoEl.style.display = "block";
 
-    
-    if (girilen === "burhan") {
-      sonuc = "maraş fedaisi";
-      durum = "success";
-    } else if (girilen === "yusuf") {
-      sonuc = "malatyalı escort";
-      durum = "success";
-    } else if (girilen === "enes") {
-      sonuc = "kkaahhppee";
-      durum = "success";
+      setTimeout(() => {
+        sonucEl.classList.add("show", "success");
+      }, 50);
+    } else {
+      sonucEl.textContent = "Sonuç bulunamadı";
+      setTimeout(() => {
+        sonucEl.classList.add("show", "error");
+      }, 50);
     }
-
-    sonucEl.textContent = sonuc;
-
-    setTimeout(() => {
-      sonucEl.classList.add("show", durum);
-    }, 50);
   }
 
   // ENTER ile ara
@@ -74,5 +96,3 @@
 
 </body>
 </html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
