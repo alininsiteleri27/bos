@@ -1,40 +1,167 @@
-/* ========== GENEL AYARLAR ========== */
+/* ===============================
+   🔥 11/A • DARK LEGEND THEME
+   =============================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap');
+
+:root {
+  --bg-main: #05060d;
+  --bg-glass: rgba(255, 255, 255, 0.08);
+  --neon-blue: #00f2ff;
+  --neon-purple: #7a5cff;
+  --neon-red: #ff3b3b;
+  --text-main: #f1f1ff;
+  --text-muted: #9fa3c7;
+}
+
+/* ========== RESET ========== */
+* {
+  box-sizing: border-box;
+}
+
+/* ========== BODY / ARKA PLAN ========== */
 body {
   margin: 0;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  background:
+    radial-gradient(circle at 15% 20%, rgba(0,242,255,0.12), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(122,92,255,0.12), transparent 45%),
+    linear-gradient(135deg, #020024, #070a2b, #000000);
+
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* ========== ARKA PLAN YAZI EFEKTİ ========== */
+body::before {
+  content: "11/A • ÖZEL SİSTEM";
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 60px;
+  letter-spacing: 10px;
+  color: rgba(255,255,255,0.035);
+  pointer-events: none;
+  user-select: none;
 }
 
 /* ========== ARAMA KUTUSU ========== */
 .search-box {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  border-
-  body {
-  background: 
-    radial-gradient(circle at top, rgba(0,255,255,0.15), transparent 40%),
-    linear-gradient(135deg, #020024, #090979, #000000);
-  background-attachment: fixed;
-  color: white;
+  display: flex;
+  gap: 10px;
+  padding: 22px 24px;
+
+  background: var(--bg-glass);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+
+  box-shadow:
+    0 0 30px rgba(0,242,255,0.15),
+    inset 0 0 20px rgba(255,255,255,0.05);
+
+  animation: floatBox 6s ease-in-out infinite;
 }
 
-/* Arka planda yazı efekti */
-body::before {
-  content: "11/A • SINIF SİSTEMİ";
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  font-size: 60px;
-  font-weight: bold;
-  color: rgba(255,255,255,0.04);
-  letter-spacing: 8px;
-  pointer-events: none;
+/* ========== INPUT ========== */
+.fear-search {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+
+  padding: 12px 16px;
+  font-size: 16px;
+  color: var(--text-main);
+  width: 220px;
+
+  outline: none;
+  transition: all 0.3s ease;
 }
+
+.fear-search::placeholder {
+  color: var(--text-muted);
+}
+
+.fear-search:focus {
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 15px rgba(0,242,255,0.6);
+}
+
+/* ========== BUTTON ========== */
+#searchBtn {
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+  border: none;
+  border-radius: 12px;
+
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+
+  box-shadow: 0 0 20px rgba(0,242,255,0.5);
+  transition: all 0.3s ease;
+}
+
+#searchBtn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 35px rgba(122,92,255,0.8);
+}
+
+/* ========== SONUÇ YAZISI ========== */
+#sonuc {
+  margin-top: 25px;
+  font-size: 20px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(0,242,255,0.4);
+}
+
+/* ========== FOOTER ========== */
+.site-footer {
+  position: fixed;
+  bottom: 15px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.site-footer span {
+  color: var(--neon-blue);
+}
+
+/* ========== ANİMASYONLAR ========== */
+@keyframes floatBox {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* ========== FEAR MODE (ARA BULUNCA) ========== */
+body.fear-mode {
+  animation: fearFlash 0.3s ease;
+}
+
+@keyframes fearFlash {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.4);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
 
