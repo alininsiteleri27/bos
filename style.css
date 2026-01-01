@@ -14,12 +14,12 @@
   --muted: #9fb3c2;
 }
 
-/* ========== RESET ========== */
+/* RESET */
 * {
   box-sizing: border-box;
 }
 
-/* ========== BODY / SHELBY BACKGROUND ========== */
+/* BODY – SHELBY BACKGROUND */
 body {
   margin: 0;
   min-height: 100vh;
@@ -32,7 +32,7 @@ body {
 
   background-image:
     linear-gradient(rgba(5,15,20,0.88), rgba(5,15,20,0.88)),
-    url("images/shelby.jpg");
+    url("fotos/shelby.jpg");
 
   background-size: cover;
   background-position: center;
@@ -42,14 +42,14 @@ body {
   overflow-x: hidden;
 }
 
-/* Mobil fix */
+/* Mobil */
 @media (max-width: 768px) {
   body {
     background-attachment: scroll;
   }
 }
 
-/* ========== ANA PANEL ========== */
+/* ANA PANEL */
 .app {
   width: 430px;
   padding: 38px 36px 32px;
@@ -78,7 +78,7 @@ body {
   }
 }
 
-/* ========== PANEL BAŞLIK ========== */
+/* PANEL BAŞLIK */
 .app::before {
   content: "11/A • CONTROL PANEL";
   display: block;
@@ -89,7 +89,7 @@ body {
   color: var(--muted);
 }
 
-/* ========== ARAMA ========== */
+/* ARAMA */
 .search-box {
   display: flex;
   gap: 12px;
@@ -119,7 +119,7 @@ body {
   box-shadow: 0 0 0 3px rgba(79,209,255,0.25);
 }
 
-/* ========== BUTON ========== */
+/* BUTON */
 #searchBtn {
   padding: 14px 20px;
   border-radius: 14px;
@@ -139,7 +139,7 @@ body {
   box-shadow: 0 15px 35px rgba(79,209,255,0.55);
 }
 
-/* ========== SONUÇ ========== */
+/* SONUÇ */
 #sonuc {
   margin-top: 22px;
   font-size: 19px;
@@ -147,13 +147,13 @@ body {
   text-shadow: 0 0 10px rgba(79,209,255,0.35);
 }
 
-/* ========== FOTO ========== */
+/* FOTO */
 #sonucFoto {
   margin-top: 18px;
   max-width: 100%;
 }
 
-/* ========== SOSYAL PANEL ========== */
+/* SOSYAL PANEL */
 .info-panel {
   margin-top: 34px;
   padding: 18px 16px;
@@ -203,4 +203,3 @@ body {
 .panel-item.ig:hover { color: #ff7ad9; }
 .panel-item.tt:hover { color: #7cffe1; }
 .panel-item.gh:hover { color: #c7c7ff; }
-
