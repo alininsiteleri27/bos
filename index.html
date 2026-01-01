@@ -60,4 +60,22 @@ function ara() {
 </body>
 </html>
 <input type="search" placeholder="Bir şey ara..." class="fear-search">
+<input type="search" id="searchInput" class="fear-search" placeholder="Bir şey ara...">
+<button id="searchBtn">Ara</button>
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const searchBtn = document.getElementById("searchBtn");
+
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // form varsa submiti engeller
+      searchBtn.click();  // otomatik ara
+    }
+  });
+
+  searchBtn.addEventListener("click", () => {
+    console.log("ARANIYOR...");
+    // buraya arama kodunu yazarsın
+  });
+</script>
 
