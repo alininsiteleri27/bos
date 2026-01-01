@@ -18,12 +18,7 @@
 </script>
 
 <div class="search-box">
-  <input
-    type="search"
-    id="arama"
-    class="fear-search"
-    placeholder="Bir şey yaz"
-  >
+  <input type="search" id="arama" class="fear-search" placeholder="Bir şey yaz">
   <button id="searchBtn">Ara</button>
 </div>
 
@@ -36,90 +31,28 @@
   const fotoEl = document.getElementById("sonucFoto");
 
   const kisiler = {
-    küpra: {
-      mesaj: "hafif",
-      foto: "fotos/küpra.jpg"
-    },
-    yusuf: {
-      mesaj: "ırkçı",
-      foto: "fotos/yusuf.jpg"
-    },
-    beyza: {
-      mesaj: "egoist sıçan",
-      foto: "fotos/beyza.jpg"
-    },
-    enes: {
-      mesaj: "kkaahhppee",
-      foto: "fotos/enes.jpg"
-    }, hira: {
-      mesaj: "beyinsiz",
-      foto: "fotos/hira.jpg"
-    }, hacer: {
-      mesaj: "erkek",
-      foto: "fotos/hacer.jpg"
-    }, deniz: {
-      mesaj: "sınıfın taklitmanı",
-      foto: "fotos/deniz.jpg"
-    }, efe: {
-      mesaj: "yaşıyor",
-      foto: "fotos/efe.jpg"
-    },
-    ayhan: {
-      mesaj: "gergin görünen adam",
-      foto: "fotos/ayhan.jpg"
-    },
-    dilber: {
-      mesaj: "şevvalin50tonu",
-      foto: "fotos/dilber.jpg"
-    },
-    samset: {
-      mesaj: "başkan",
-      foto: "fotos/samset.jpg"
-    },
-    ipek: {
-      mesaj: "gergedan",
-      foto: "fotos/ipek.jpg"
-    },
-    esma: {
-      mesaj: "umrede",
-      foto: "fotos/esma.jpg"
-    },
-    sude: {
-      mesaj: "gözlük yokki",
-      foto: "fotos/sude.jpg"
-    },
-     cehennet: {
-      mesaj: "depremci kürt",
-      foto: "fotos/cehennet.jpg"
-    },
-    berke: {
-      mesaj: "kas kütlesi",
-      foto: "fotos/berke.jpg"
-    },
-     eminbabapiro: {
-      mesaj: "atatürk",
-      foto: "fotos/emin.jpg"
-    },
-     hashüs: {
-      mesaj: "ineğin kalçası",
-      foto: "fotos/hashüs.jpg"
-    },
-     bünyamin: {
-      mesaj: "bilekkıran",
-      foto: "fotos/bünyamin.jpg"
-    },
-     efsa: {
-      mesaj: "başkaniye",
-      foto: "fotos/efsa.jpg"
-    },
-     merve: {
-      mesaj: "efsanınellitonu",
-      foto: "fotos/merve.jpg"
-    },
-     cilo: {
-      mesaj: "efsanınellitonu",
-      foto: "fotos/cilo.jpg"
-    },
+    kupra: { mesaj: "hafif", foto: "fotos/kupra.jpg" },
+    yusuf: { mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
+    beyza: { mesaj: "egoist sıçan", foto: "fotos/beyza.jpg" },
+    enes: { mesaj: "kkaahhppee", foto: "fotos/enes.jpg" },
+    hira: { mesaj: "beyinsiz", foto: "fotos/hira.jpg" },
+    hacer: { mesaj: "erkek", foto: "fotos/hacer.jpg" },
+    deniz: { mesaj: "sınıfın taklitmanı", foto: "fotos/deniz.jpg" },
+    efe: { mesaj: "yaşıyor", foto: "fotos/efe.jpg" },
+    ayhan: { mesaj: "gergin görünen adam", foto: "fotos/ayhan.jpg" },
+    dilber: { mesaj: "şevvalin50tonu", foto: "fotos/dilber.jpg" },
+    samset: { mesaj: "başkan", foto: "fotos/samset.jpg" },
+    ipek: { mesaj: "gergedan", foto: "fotos/ipek.jpg" },
+    esma: { mesaj: "umrede", foto: "fotos/esma.jpg" },
+    sude: { mesaj: "gözlük yokki", foto: "fotos/sude.jpg" },
+    cehennet: { mesaj: "depremci", foto: "fotos/cehennet.jpg" },
+    berke: { mesaj: "kas kütlesi", foto: "fotos/berke.jpg" },
+    eminbabapiro: { mesaj: "atatürk", foto: "fotos/emin.jpg" },
+    hashus: { mesaj: "ineğin kalçası", foto: "fotos/hashus.jpg" },
+    bunyamin: { mesaj: "bilekkıran", foto: "fotos/bunyamin.jpg" },
+    efsa: { mesaj: "başkaniye", foto: "fotos/efsa.jpg" },
+    merve: { mesaj: "efsanın elli tonu", foto: "fotos/merve.jpg" },
+    cilo: { mesaj: "efsanın elli tonu", foto: "fotos/cilo.jpg" }
   };
 
   function ara() {
@@ -129,11 +62,16 @@
     sonucEl.className = "";
     fotoEl.style.display = "none";
     fotoEl.src = "";
+    fotoEl.classList.remove("show");
 
     if (kisiler[girilen]) {
       sonucEl.textContent = kisiler[girilen].mesaj;
       fotoEl.src = kisiler[girilen].foto;
-      fotoEl.style.display = "block";
+
+      setTimeout(() => {
+        fotoEl.style.display = "block";
+        fotoEl.classList.add("show");
+      }, 300);
 
       setTimeout(() => {
         sonucEl.classList.add("show", "success");
