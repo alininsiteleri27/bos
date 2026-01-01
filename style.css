@@ -2,8 +2,6 @@
 
 :root {
   --bg-dark: #060b10;
-  --bg-grad1: #0b1f26;
-  --bg-grad2: #122e38;
 
   --panel: rgba(255,255,255,0.08);
   --panel-strong: rgba(255,255,255,0.12);
@@ -21,6 +19,7 @@
   box-sizing: border-box;
 }
 
+/* ========== BODY / SHELBY BACKGROUND ========== */
 body {
   margin: 0;
   min-height: 100vh;
@@ -31,11 +30,23 @@ body {
   align-items: center;
   justify-content: center;
 
-  background:
-    radial-gradient(circle at top, rgba(79,209,255,0.12), transparent 40%),
-    linear-gradient(135deg, var(--bg-grad1), var(--bg-grad2), var(--bg-dark));
+  background-image:
+    linear-gradient(rgba(5,15,20,0.88), rgba(5,15,20,0.88)),
+    url("images/shelby.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 
   overflow-x: hidden;
+}
+
+/* Mobil fix */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 /* ========== ANA PANEL ========== */
@@ -91,7 +102,7 @@ body {
   border-radius: 14px;
   border: 1px solid var(--border);
 
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.45);
   color: var(--text);
   font-size: 16px;
   outline: none;
@@ -142,10 +153,7 @@ body {
   max-width: 100%;
 }
 
-/* ==========================
-   🧱 SOSYAL / BİLGİ PANELİ
-   ========================== */
-
+/* ========== SOSYAL PANEL ========== */
 .info-panel {
   margin-top: 34px;
   padding: 18px 16px;
@@ -157,7 +165,6 @@ body {
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
 }
 
-/* PANEL BAŞLIK */
 .panel-title {
   font-size: 13px;
   letter-spacing: 3px;
@@ -166,14 +173,12 @@ body {
   margin-bottom: 16px;
 }
 
-/* GRID */
 .panel-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
-/* KART */
 .panel-item {
   padding: 12px 0;
   border-radius: 12px;
@@ -183,7 +188,7 @@ body {
   font-size: 14px;
   color: var(--text);
 
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.45);
   border: 1px solid var(--border);
 
   transition: all 0.25s ease;
@@ -195,19 +200,7 @@ body {
   border-color: var(--accent);
 }
 
-/* RENK DOKUNUŞLARI */
 .panel-item.ig:hover { color: #ff7ad9; }
 .panel-item.tt:hover { color: #7cffe1; }
 .panel-item.gh:hover { color: #c7c7ff; }
 
-/* ALT BİLGİ */
-.panel-footer {
-  margin-top: 16px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.panel-footer span {
-  color: var(--accent);
-  font-weight: 600;
-}
