@@ -93,7 +93,30 @@ body.fear-mode {
   border: 2px solid #555;
   background: #111;
   color: red;
+} 
+.search-box {
+  display: flex;
+  gap: 10px;
 }
+
+@media (max-width: 600px) {
+  .search-box {
+    flex-direction: column;
+  }
+
+  .fear-search,
+  #searchBtn {
+    width: 100%;
+    font-size: 18px;
+    padding: 14px;
+  }
+
+  #sonuc {
+    font-size: 20px;
+    text-align: center;
+  }
+}
+
 
 .fear-search:focus {
   animation: shake 0.1s infinite;
