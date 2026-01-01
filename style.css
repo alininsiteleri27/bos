@@ -17,3 +17,24 @@ body {
   backdrop-filter: blur(10px);
   padding: 20px;
   border-
+  body {
+  background: 
+    radial-gradient(circle at top, rgba(0,255,255,0.15), transparent 40%),
+    linear-gradient(135deg, #020024, #090979, #000000);
+  background-attachment: fixed;
+  color: white;
+}
+
+/* Arka planda yazı efekti */
+body::before {
+  content: "11/A • SINIF SİSTEMİ";
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 60px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.04);
+  letter-spacing: 8px;
+  pointer-events: none;
+}
+
