@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <title>11/A Özel Arama Sistemi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* FOTO */
     #sonucFoto {
       width: 160px;
       height: 200px;
@@ -17,10 +15,11 @@
       display: none;
       opacity: 0;
       transform: scale(0.9);
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: opacity .3s ease, transform .3s ease;
       border-radius: 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 30px rgba(0,0,0,.6);
     }
+
     #sonucFoto.show {
       opacity: 1;
       transform: scale(1);
@@ -31,34 +30,6 @@
         width: 120px;
         height: 150px;
       }
-    }
-
-    /* AD */
-    #ad {
-      margin-top: 18px;
-      font-size: 22px;
-      font-weight: 800;
-      color: #4fd1ff;
-      text-shadow: 0 0 12px rgba(79,209,255,0.6);
-    }
-
-    /* SOYAD */
-    #soyad {
-      margin-top: 4px;
-      font-size: 15px;
-      font-weight: 600;
-      color: #9fb3c2;
-    }
-
-    .producer {
-      margin-top: 14px;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 4px;
-      color: #4fd1ff;
-      text-shadow:
-        0 0 10px rgba(79,209,255,0.8),
-        0 0 25px rgba(79,209,255,0.6);
     }
   </style>
 </head>
@@ -78,7 +49,7 @@
 <main class="app">
 
   <div class="search-box">
-    <input type="search" id="arama" placeholder="ad" autocomplete="off">
+    <input id="arama" type="search" placeholder="ad" autocomplete="off">
     <button id="searchBtn">Ara</button>
   </div>
 
@@ -86,13 +57,13 @@
   <p id="soyad"></p>
   <p id="sonuc"></p>
 
-  <img id="sonucFoto" alt="Sonuç Fotoğrafı">
+  <img id="sonucFoto" alt="Foto">
 
   <section class="info-panel">
     <div class="panel-title">11/A • BAĞLANTILAR</div>
     <div class="panel-grid">
-      <a href="https://www.instagram.com/meali.kcgln" target="_blank" class="panel-item ig">Instagram</a>
-      <a href="https://github.com/alininsiteleri27" target="_blank" class="panel-item gh">GitHub</a>
+      <a href="https://www.instagram.com/meali.kcgln" target="_blank" class="panel-item">Instagram</a>
+      <a href="https://github.com/alininsiteleri27" target="_blank" class="panel-item">GitHub</a>
     </div>
     <div class="producer">KCGLN ALI</div>
   </section>
@@ -103,12 +74,12 @@
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
 <script>
-  const searchInput = document.getElementById("arama");
-  const searchBtn = document.getElementById("searchBtn");
+  const arama = document.getElementById("arama");
+  const btn = document.getElementById("searchBtn");
   const adEl = document.getElementById("ad");
   const soyadEl = document.getElementById("soyad");
   const sonucEl = document.getElementById("sonuc");
-  const fotoEl = document.getElementById("sonucFoto");
+  const foto = document.getElementById("sonucFoto");
 
   const successSound = document.getElementById("successSound");
   const errorSound = document.getElementById("errorSound");
@@ -139,42 +110,33 @@
     emre:{ad:"Emre",soyad:"?",mesaj:"bıyıklı",foto:"fotos/emre.jpg"}
   };
 
-  function ara() {
-    const girilen = searchInput.value.toLocaleLowerCase("tr-TR").trim();
-    const ad = girilen.split(" ")[0];
+  function ara(){
+    const key = arama.value.toLocaleLowerCase("tr-TR").trim();
+    adEl.textContent = soyadEl.textContent = sonucEl.textContent = "";
+    foto.style.display = "none";
+    foto.classList.remove("show");
 
-    adEl.textContent = "";
-    soyadEl.textContent = "";
-    sonucEl.textContent = "";
-    fotoEl.style.display = "none";
-    fotoEl.classList.remove("show");
-    fotoEl.src = "";
+    if(!key) return;
 
-    if (!ad) return;
-
-    if (kisiler[ad]) {
-      const k = kisiler[ad];
+    if(kisiler[key]){
+      const k = kisiler[key];
       adEl.textContent = k.ad;
       soyadEl.textContent = k.soyad;
       sonucEl.textContent = k.mesaj;
-
-      successSound.currentTime = 0;
       successSound.play();
-
-      setTimeout(() => {
-        fotoEl.src = k.foto;
-        fotoEl.style.display = "block";
-        fotoEl.classList.add("show");
-      }, 150);
+      setTimeout(()=>{
+        foto.src = k.foto;
+        foto.style.display = "block";
+        foto.classList.add("show");
+      },150);
     } else {
       sonucEl.textContent = "Sonuç bulunamadı";
-      errorSound.currentTime = 0;
       errorSound.play();
     }
   }
 
-  searchBtn.onclick = ara;
-  searchInput.onkeydown = e => e.key === "Enter" && ara();
+  btn.onclick = ara;
+  arama.onkeydown = e => e.key === "Enter" && ara();
 </script>
 
 </body>
