@@ -8,17 +8,39 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    /* 🔒 KİŞİ FOTOĞRAFI KİLİT */
     #sonucFoto {
-      opacity: 0;
-      transform: scale(0.85);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      width: 160px;
+      height: 200px;
+      max-width: 160px;
+      max-height: 200px;
+
+      object-fit: cover;
+
+      margin: 14px auto 0;
       display: none;
-      border-radius: 16px;
+
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+
+      border-radius: 14px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
+
     #sonucFoto.show {
       opacity: 1;
       transform: scale(1);
+    }
+
+    /* 📱 MOBİLDE DAHA KÜÇÜK */
+    @media (max-width: 600px) {
+      #sonucFoto {
+        width: 120px;
+        height: 150px;
+        max-width: 120px;
+        max-height: 150px;
+      }
     }
 
     .producer {
@@ -52,17 +74,13 @@
     <input
       type="search"
       id="arama"
-      class="fear-search"
       placeholder="ad"
       autocomplete="off"
     >
     <button id="searchBtn">Ara</button>
   </div>
 
-  <!-- AD SOYAD -->
   <p id="adSoyad"></p>
-
-  <!-- MESAJ -->
   <p id="sonuc"></p>
 
   <img id="sonucFoto" alt="Sonuç Fotoğrafı">
@@ -120,7 +138,9 @@
   };
 
   function ara() {
-    const girilen = searchInput.value.toLowerCase().trim();
+    const girilen = searchInput.value
+      .toLocaleLowerCase("tr-TR")
+      .trim();
     const ad = girilen.split(" ")[0];
 
     adSoyadEl.textContent = "";
@@ -133,7 +153,6 @@
 
     if (kisiler[ad]) {
       const kisi = kisiler[ad];
-
       adSoyadEl.textContent = kisi.ad + " " + kisi.soyad;
       sonucEl.textContent = kisi.mesaj;
 
@@ -144,7 +163,7 @@
         fotoEl.src = kisi.foto;
         fotoEl.style.display = "block";
         fotoEl.classList.add("show");
-      }, 200);
+      }, 150);
     } else {
       sonucEl.textContent = "Sonuç bulunamadı";
       errorSound.currentTime = 0;
@@ -152,14 +171,9 @@
     }
   }
 
-  searchBtn.addEventListener("click", ara);
-  searchInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      ara();
-    }
-  });
+  searchBtn.onclick = ara;
+  searchInput.onkeydown = e => e.key === "Enter" && ara();
 </script>
 
 </body>
-  </html>
+</html>
