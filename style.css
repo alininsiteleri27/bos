@@ -202,4 +202,13 @@ body {
 
 .panel-item.ig:hover { color: #ff7ad9; }
 .panel-item.tt:hover { color: #7cffe1; }
-.panel-item.gh:hover { color: #c7c7ff; }
+.panel-item.gh:hover { color: #c7c7ff; } 
+
+#adSoyad {
+  margin-top: 20px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent);
+  text-shadow: 0 0 10px rgba(79,209,255,0.45);
+}
