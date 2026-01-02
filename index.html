@@ -59,12 +59,15 @@
     <button id="searchBtn">Ara</button>
   </div>
 
+  <!-- ✅ YENİ: AD SOYAD -->
+  <p id="adSoyad"></p>
+
+  <!-- MESAJ -->
   <p id="sonuc"></p>
 
   <img id="sonucFoto" alt="Sonuç Fotoğrafı">
 
   <section class="info-panel">
-
     <div class="panel-title">11/A • BAĞLANTILAR</div>
 
     <div class="panel-grid">
@@ -73,7 +76,6 @@
     </div>
 
     <div class="producer">KCGLN ALI</div>
-
   </section>
 
 </main>
@@ -85,6 +87,7 @@
   const searchInput = document.getElementById("arama");
   const searchBtn = document.getElementById("searchBtn");
   const sonucEl = document.getElementById("sonuc");
+  const adSoyadEl = document.getElementById("adSoyad");
   const fotoEl = document.getElementById("sonucFoto");
 
   const successSound = document.getElementById("successSound");
@@ -120,6 +123,7 @@
     const girilen = searchInput.value.toLowerCase().trim();
     const ad = girilen.split(" ")[0];
 
+    adSoyadEl.textContent = "";
     sonucEl.textContent = "";
     fotoEl.style.display = "none";
     fotoEl.classList.remove("show");
@@ -129,7 +133,9 @@
 
     if (kisiler[ad]) {
       const kisi = kisiler[ad];
-      sonucEl.textContent = kisi.ad + " " + kisi.soyad + " • " + kisi.mesaj;
+
+      adSoyadEl.textContent = kisi.ad + " " + kisi.soyad;
+      sonucEl.textContent = kisi.mesaj;
 
       successSound.currentTime = 0;
       successSound.play();
