@@ -8,39 +8,46 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* 🔒 KİŞİ FOTOĞRAFI KİLİT */
+    /* FOTO */
     #sonucFoto {
       width: 160px;
       height: 200px;
-      max-width: 160px;
-      max-height: 200px;
-
       object-fit: cover;
-
       margin: 14px auto 0;
       display: none;
-
       opacity: 0;
       transform: scale(0.9);
       transition: opacity 0.3s ease, transform 0.3s ease;
-
       border-radius: 14px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
-
     #sonucFoto.show {
       opacity: 1;
       transform: scale(1);
     }
 
-    /* 📱 MOBİLDE DAHA KÜÇÜK */
     @media (max-width: 600px) {
       #sonucFoto {
         width: 120px;
         height: 150px;
-        max-width: 120px;
-        max-height: 150px;
       }
+    }
+
+    /* AD */
+    #ad {
+      margin-top: 18px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #4fd1ff;
+      text-shadow: 0 0 12px rgba(79,209,255,0.6);
+    }
+
+    /* SOYAD */
+    #soyad {
+      margin-top: 4px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #9fb3c2;
     }
 
     .producer {
@@ -71,28 +78,22 @@
 <main class="app">
 
   <div class="search-box">
-    <input
-      type="search"
-      id="arama"
-      placeholder="ad"
-      autocomplete="off"
-    >
+    <input type="search" id="arama" placeholder="ad" autocomplete="off">
     <button id="searchBtn">Ara</button>
   </div>
 
-  <p id="adSoyad"></p>
+  <p id="ad"></p>
+  <p id="soyad"></p>
   <p id="sonuc"></p>
 
   <img id="sonucFoto" alt="Sonuç Fotoğrafı">
 
   <section class="info-panel">
     <div class="panel-title">11/A • BAĞLANTILAR</div>
-
     <div class="panel-grid">
       <a href="https://www.instagram.com/meali.kcgln" target="_blank" class="panel-item ig">Instagram</a>
       <a href="https://github.com/alininsiteleri27" target="_blank" class="panel-item gh">GitHub</a>
     </div>
-
     <div class="producer">KCGLN ALI</div>
   </section>
 
@@ -104,46 +105,46 @@
 <script>
   const searchInput = document.getElementById("arama");
   const searchBtn = document.getElementById("searchBtn");
+  const adEl = document.getElementById("ad");
+  const soyadEl = document.getElementById("soyad");
   const sonucEl = document.getElementById("sonuc");
-  const adSoyadEl = document.getElementById("adSoyad");
   const fotoEl = document.getElementById("sonucFoto");
 
   const successSound = document.getElementById("successSound");
   const errorSound = document.getElementById("errorSound");
 
   const kisiler = {
-    küpra: { ad: "Küpra", soyad: "?", mesaj: "hafif", foto: "fotos/küpra.jpg" },
-    yusuf: { ad: "Yusuf", soyad: "?", mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
-    beyza: { ad: "Beyza", soyad: "?", mesaj: "egoist sıçan", foto: "fotos/beyza.jpg" },
-    enes: { ad: "Enes", soyad: "?", mesaj: "kkaahhppee", foto: "fotos/enes.jpg" },
-    hira: { ad: "Hira", soyad: "?", mesaj: "beyinsiz", foto: "fotos/hira.jpg" },
-    hacer: { ad: "Hacer", soyad: "?", mesaj: "erkek", foto: "fotos/hacer.jpg" },
-    deniz: { ad: "Deniz", soyad: "?", mesaj: "sınıfın taklitmanı", foto: "fotos/deniz.jpg" },
-    efe: { ad: "Efe", soyad: "?", mesaj: "yaşıyor", foto: "fotos/efe.jpg" },
-    ayhan: { ad: "Ayhan", soyad: "?", mesaj: "gergin görünen adam", foto: "fotos/ayhan.jpg" },
-    dilber: { ad: "Dilber", soyad: "?", mesaj: "şevvalin50tonu", foto: "fotos/dilber.jpg" },
-    samet: { ad: "Samet", soyad: "?", mesaj: "başkan", foto: "fotos/samet.jpg" },
-    ipek: { ad: "İpek", soyad: "?", mesaj: "gergedan", foto: "fotos/ipek.jpg" },
-    esma: { ad: "Esma", soyad: "?", mesaj: "umrede", foto: "fotos/esma.jpg" },
-    sude: { ad: "Sude", soyad: "?", mesaj: "gözlük yokki", foto: "fotos/sude.jpg" },
-    cehennet: { ad: "Cehennet", soyad: "?", mesaj: "depremci", foto: "fotos/cehennet.jpg" },
-    berke: { ad: "Berke", soyad: "?", mesaj: "kas kütlesi", foto: "fotos/berke.jpg" },
-    emin: { ad: "Emin", soyad: "?", mesaj: "atatürk", foto: "fotos/emin.jpg" },
-    hashüs: { ad: "Hashüs", soyad: "?", mesaj: "ineğin kalçası", foto: "fotos/hashüs.jpg" },
-    bünyamin: { ad: "Bünyamin", soyad: "?", mesaj: "bilekkıran", foto: "fotos/bünyamin.jpg" },
-    efsa: { ad: "Efsa", soyad: "?", mesaj: "başkaniye", foto: "fotos/efsa.jpg" },
-    merve: { ad: "Merve", soyad: "?", mesaj: "efsanın elli tonu", foto: "fotos/merve.jpg" },
-    cilo: { ad: "Cilo", soyad: "?", mesaj: "godfather", foto: "fotos/cilo.jpg" },
-    emre: { ad: "Emre", soyad: "?", mesaj: "bıyıklı", foto: "fotos/emre.jpg" }
+    küpra:{ad:"Küpra",soyad:"?",mesaj:"hafif",foto:"fotos/küpra.jpg"},
+    yusuf:{ad:"Yusuf",soyad:"?",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
+    beyza:{ad:"Beyza",soyad:"?",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
+    enes:{ad:"Enes",soyad:"?",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
+    hira:{ad:"Hira",soyad:"?",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
+    hacer:{ad:"Hacer",soyad:"?",mesaj:"erkek",foto:"fotos/hacer.jpg"},
+    deniz:{ad:"Deniz",soyad:"?",mesaj:"sınıfın taklitmanı",foto:"fotos/deniz.jpg"},
+    efe:{ad:"Efe",soyad:"?",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
+    ayhan:{ad:"Ayhan",soyad:"?",mesaj:"gergin görünen adam",foto:"fotos/ayhan.jpg"},
+    dilber:{ad:"Dilber",soyad:"?",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
+    samet:{ad:"Samet",soyad:"?",mesaj:"başkan",foto:"fotos/samet.jpg"},
+    ipek:{ad:"İpek",soyad:"?",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
+    esma:{ad:"Esma",soyad:"?",mesaj:"umrede",foto:"fotos/esma.jpg"},
+    sude:{ad:"Sude",soyad:"?",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
+    cehennet:{ad:"Cehennet",soyad:"?",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
+    berke:{ad:"Berke",soyad:"?",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
+    emin:{ad:"Emin",soyad:"?",mesaj:"atatürk",foto:"fotos/emin.jpg"},
+    hashüs:{ad:"Hashüs",soyad:"?",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
+    bünyamin:{ad:"Bünyamin",soyad:"?",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
+    efsa:{ad:"Efsa",soyad:"?",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
+    merve:{ad:"Merve",soyad:"?",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
+    cilo:{ad:"Cilo",soyad:"?",mesaj:"godfather",foto:"fotos/cilo.jpg"},
+    emre:{ad:"Emre",soyad:"?",mesaj:"bıyıklı",foto:"fotos/emre.jpg"}
   };
 
   function ara() {
-    const girilen = searchInput.value
-      .toLocaleLowerCase("tr-TR")
-      .trim();
+    const girilen = searchInput.value.toLocaleLowerCase("tr-TR").trim();
     const ad = girilen.split(" ")[0];
 
-    adSoyadEl.textContent = "";
+    adEl.textContent = "";
+    soyadEl.textContent = "";
     sonucEl.textContent = "";
     fotoEl.style.display = "none";
     fotoEl.classList.remove("show");
@@ -152,15 +153,16 @@
     if (!ad) return;
 
     if (kisiler[ad]) {
-      const kisi = kisiler[ad];
-      adSoyadEl.textContent = kisi.ad + " " + kisi.soyad;
-      sonucEl.textContent = kisi.mesaj;
+      const k = kisiler[ad];
+      adEl.textContent = k.ad;
+      soyadEl.textContent = k.soyad;
+      sonucEl.textContent = k.mesaj;
 
       successSound.currentTime = 0;
       successSound.play();
 
       setTimeout(() => {
-        fotoEl.src = kisi.foto;
+        fotoEl.src = k.foto;
         fotoEl.style.display = "block";
         fotoEl.classList.add("show");
       }, 150);
