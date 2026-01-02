@@ -118,3 +118,13 @@ body {
 @media (max-width: 600px) {
   .search-box { flex-direction: column; }
 }
+.search-box input {
+  background: rgba(0,0,0,0.35);
+  color: #eaf6ff;
+  caret-color: #4fd1ff;
+}
+
+.search-box input::placeholder {
+  color: #9fb3c2;
+}
+
