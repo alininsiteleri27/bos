@@ -19,12 +19,10 @@
       border-radius: 14px;
       box-shadow: 0 10px 30px rgba(0,0,0,.6);
     }
-
     #sonucFoto.show {
       opacity: 1;
       transform: scale(1);
     }
-
     @media (max-width: 600px) {
       #sonucFoto {
         width: 120px;
@@ -76,7 +74,6 @@
   const arama = document.getElementById("arama");
   const btn = document.getElementById("searchBtn");
   const adEl = document.getElementById("ad");
-  const soyadEl = document.getElementById("soyad");
   const sonucEl = document.getElementById("sonuc");
   const foto = document.getElementById("sonucFoto");
 
@@ -111,7 +108,9 @@
 
   function ara(){
     const key = arama.value.toLocaleLowerCase("tr-TR").trim();
-    adEl.textContent = soyadEl.textContent = sonucEl.textContent = "";
+
+    adEl.textContent = "";
+    sonucEl.textContent = "";
     foto.style.display = "none";
     foto.classList.remove("show");
 
@@ -119,10 +118,11 @@
 
     if(kisiler[key]){
       const k = kisiler[key];
-      adEl.textContent = k.ad;
-      soyadEl.textContent = k.soyad;
+      adEl.textContent = k.ad + " " + k.soyad;
       sonucEl.textContent = k.mesaj;
+      successSound.currentTime = 0;
       successSound.play();
+
       setTimeout(()=>{
         foto.src = k.foto;
         foto.style.display = "block";
@@ -130,12 +130,15 @@
       },150);
     } else {
       sonucEl.textContent = "Sonuç bulunamadı";
+      errorSound.currentTime = 0;
       errorSound.play();
     }
   }
 
   btn.onclick = ara;
-  arama.onkeydown = e => e.key === "Enter" && ara();
+  arama.addEventListener("keydown", e => {
+    if (e.key === "Enter") ara();
+  });
 </script>
 
 </body>
