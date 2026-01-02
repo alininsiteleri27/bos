@@ -53,7 +53,7 @@
       type="search"
       id="arama"
       class="fear-search"
-      placeholder="sadece ilk adı yaz..."
+      placeholder="ad veya ad soyad yaz..."
       autocomplete="off"
     >
     <button id="searchBtn">Ara</button>
@@ -68,21 +68,8 @@
     <div class="panel-title">11/A • BAĞLANTILAR</div>
 
     <div class="panel-grid">
-      <a
-        href="https://www.instagram.com/meali.kcgln"
-        target="_blank"
-        class="panel-item ig"
-      >
-        Instagram
-      </a>
-
-      <a
-        href="https://github.com/alininsiteleri27"
-        target="_blank"
-        class="panel-item gh"
-      >
-        GitHub
-      </a>
+      <a href="https://www.instagram.com/meali.kcgln" target="_blank" class="panel-item ig">Instagram</a>
+      <a href="https://github.com/alininsiteleri27" target="_blank" class="panel-item gh">GitHub</a>
     </div>
 
     <div class="producer">KCGLN ALI</div>
@@ -104,44 +91,45 @@
   const errorSound = document.getElementById("errorSound");
 
   const kisiler = {
-    küpra: { mesaj: "hafif", foto: "fotos/küpra.jpg" },
-    yusuf: { mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
-    beyza: { mesaj: "egoist sıçan", foto: "fotos/beyza.jpg" },
-    enes: { mesaj: "kkaahhppee", foto: "fotos/enes.jpg" },
-    hira: { mesaj: "beyinsiz", foto: "fotos/hira.jpg" },
-    hacer: { mesaj: "erkek", foto: "fotos/hacer.jpg" },
-    deniz: { mesaj: "sınıfın taklitmanı", foto: "fotos/deniz.jpg" },
-    efe: { mesaj: "yaşıyor", foto: "fotos/efe.jpg" },
-    ayhan: { mesaj: "gergin görünen adam", foto: "fotos/ayhan.jpg" },
-    dilber: { mesaj: "şevvalin50tonu", foto: "fotos/dilber.jpg" },
-    samet: { mesaj: "başkan", foto: "fotos/samet.jpg" },
-    ipek: { mesaj: "gergedan", foto: "fotos/ipek.jpg" },
-    esma: { mesaj: "umrede", foto: "fotos/esma.jpg" },
-    sude: { mesaj: "gözlük yokki", foto: "fotos/sude.jpg" },
-    cehennet: { mesaj: "depremci", foto: "fotos/cehennet.jpg" },
-    berke: { mesaj: "kas kütlesi", foto: "fotos/berke.jpg" },
-    emin: { mesaj: "atatürk", foto: "fotos/emin.jpg" },
-    hashüs: { mesaj: "ineğin kalçası", foto: "fotos/hashüs.jpg" },
-    bünyamin: { mesaj: "bilekkıran", foto: "fotos/bünyamin.jpg" },
-    efsa: { mesaj: "başkaniye", foto: "fotos/efsa.jpg" },
-    merve: { mesaj: "efsanın elli tonu", foto: "fotos/merve.jpg" },
-    cilo: { mesaj: "godfather", foto: "fotos/cilo.jpg" },
-    emre: { mesaj: "bıyıklı", foto: "fotos/emre.jpg" }
+    küpra: { ad: "Küpra", soyad: "?", mesaj: "hafif", foto: "fotos/küpra.jpg" },
+    yusuf: { ad: "Yusuf", soyad: "?", mesaj: "ırkçı", foto: "fotos/yusuf.jpg" },
+    beyza: { ad: "Beyza", soyad: "?", mesaj: "egoist sıçan", foto: "fotos/beyza.jpg" },
+    enes: { ad: "Enes", soyad: "?", mesaj: "kkaahhppee", foto: "fotos/enes.jpg" },
+    hira: { ad: "Hira", soyad: "?", mesaj: "beyinsiz", foto: "fotos/hira.jpg" },
+    hacer: { ad: "Hacer", soyad: "?", mesaj: "erkek", foto: "fotos/hacer.jpg" },
+    deniz: { ad: "Deniz", soyad: "?", mesaj: "sınıfın taklitmanı", foto: "fotos/deniz.jpg" },
+    efe: { ad: "Efe", soyad: "?", mesaj: "yaşıyor", foto: "fotos/efe.jpg" },
+    ayhan: { ad: "Ayhan", soyad: "?", mesaj: "gergin görünen adam", foto: "fotos/ayhan.jpg" },
+    dilber: { ad: "Dilber", soyad: "?", mesaj: "şevvalin50tonu", foto: "fotos/dilber.jpg" },
+    samet: { ad: "Samet", soyad: "?", mesaj: "başkan", foto: "fotos/samet.jpg" },
+    ipek: { ad: "İpek", soyad: "?", mesaj: "gergedan", foto: "fotos/ipek.jpg" },
+    esma: { ad: "Esma", soyad: "?", mesaj: "umrede", foto: "fotos/esma.jpg" },
+    sude: { ad: "Sude", soyad: "?", mesaj: "gözlük yokki", foto: "fotos/sude.jpg" },
+    cehennet: { ad: "Cehennet", soyad: "?", mesaj: "depremci", foto: "fotos/cehennet.jpg" },
+    berke: { ad: "Berke", soyad: "?", mesaj: "kas kütlesi", foto: "fotos/berke.jpg" },
+    emin: { ad: "Emin", soyad: "?", mesaj: "atatürk", foto: "fotos/emin.jpg" },
+    hashüs: { ad: "Hashüs", soyad: "?", mesaj: "ineğin kalçası", foto: "fotos/hashüs.jpg" },
+    bünyamin: { ad: "Bünyamin", soyad: "?", mesaj: "bilekkıran", foto: "fotos/bünyamin.jpg" },
+    efsa: { ad: "Efsa", soyad: "?", mesaj: "başkaniye", foto: "fotos/efsa.jpg" },
+    merve: { ad: "Merve", soyad: "?", mesaj: "efsanın elli tonu", foto: "fotos/merve.jpg" },
+    cilo: { ad: "Cilo", soyad: "?", mesaj: "godfather", foto: "fotos/cilo.jpg" },
+    emre: { ad: "Emre", soyad: "?", mesaj: "bıyıklı", foto: "fotos/emre.jpg" }
   };
 
   function ara() {
     const girilen = searchInput.value.toLowerCase().trim();
+    const ad = girilen.split(" ")[0];
 
     sonucEl.textContent = "";
     fotoEl.style.display = "none";
     fotoEl.classList.remove("show");
     fotoEl.src = "";
 
-    if (!girilen) return;
+    if (!ad) return;
 
-    if (kisiler[girilen]) {
-      const kisi = kisiler[girilen];
-      sonucEl.textContent = kisi.mesaj;
+    if (kisiler[ad]) {
+      const kisi = kisiler[ad];
+      sonucEl.textContent = kisi.ad + " " + kisi.soyad + " • " + kisi.mesaj;
 
       successSound.currentTime = 0;
       successSound.play();
