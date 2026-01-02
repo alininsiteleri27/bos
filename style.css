@@ -2,213 +2,57 @@
 
 :root {
   --bg-dark: #060b10;
-
   --panel: rgba(255,255,255,0.08);
   --panel-strong: rgba(255,255,255,0.12);
   --border: rgba(255,255,255,0.18);
-
   --accent: #4fd1ff;
   --accent-2: #7c8cff;
-
   --text: #eaf6ff;
   --muted: #9fb3c2;
 }
 
-/* RESET */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-/* BODY – SHELBY BACKGROUND */
 body {
   margin: 0;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
   color: var(--text);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background-image:
     linear-gradient(rgba(5,15,20,0.88), rgba(5,15,20,0.88)),
     url("fotos/shelby.jpg");
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-
-  overflow-x: hidden;
 }
 
-/* Mobil */
-@media (max-width: 768px) {
-  body {
-    background-attachment: scroll;
-  }
-}
-
-/* ANA PANEL */
 .app {
   width: 430px;
   padding: 38px 36px 32px;
-
   background: var(--panel);
   backdrop-filter: blur(18px);
   border: 1px solid var(--border);
   border-radius: 22px;
-
-  box-shadow:
-    0 30px 80px rgba(0,0,0,0.6),
-    inset 0 0 0 1px rgba(255,255,255,0.04);
-
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
   text-align: center;
-  animation: panelIn 0.6s ease;
 }
 
-@keyframes panelIn {
-  from {
-    opacity: 0;
-    transform: translateY(25px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+#adSoyad {
+  margin-top: 18px;
+  margin-bottom: 6px;
+  min-height: 28px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  text-shadow: 0 0 12px rgba(79,209,255,0.6);
 }
 
-/* PANEL BAŞLIK */
-.app::before {
-  content: "11/A • CONTROL PANEL";
-  display: block;
-  margin-bottom: 26px;
-  font-size: 13px;
-  letter-spacing: 4px;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-/* ARAMA */
-.search-box {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.fear-search {
-  flex: 1;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-
-  background: rgba(0,0,0,0.45);
-  color: var(--text);
-  font-size: 16px;
-  outline: none;
-
-  transition: border 0.25s ease, box-shadow 0.25s ease;
-}
-
-.fear-search::placeholder {
-  color: var(--muted);
-}
-
-.fear-search:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(79,209,255,0.25);
-}
-
-/* BUTON */
-#searchBtn {
-  padding: 14px 20px;
-  border-radius: 14px;
-  border: none;
-
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #02161d;
-  font-weight: 700;
-  cursor: pointer;
-
-  box-shadow: 0 10px 25px rgba(79,209,255,0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-#searchBtn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 15px 35px rgba(79,209,255,0.55);
-}
-
-/* SONUÇ */
 #sonuc {
-  margin-top: 22px;
   font-size: 19px;
   font-weight: 600;
   text-shadow: 0 0 10px rgba(79,209,255,0.35);
-}
-
-/* FOTO */
-#sonucFoto {
-  margin-top: 18px;
-  max-width: 100%;
-}
-
-/* SOSYAL PANEL */
-.info-panel {
-  margin-top: 34px;
-  padding: 18px 16px;
-
-  background: var(--panel-strong);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-}
-
-.panel-title {
-  font-size: 13px;
-  letter-spacing: 3px;
-  font-weight: 700;
-  color: var(--muted);
-  margin-bottom: 16px;
-}
-
-.panel-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.panel-item {
-  padding: 12px 0;
-  border-radius: 12px;
-  text-decoration: none;
-
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text);
-
-  background: rgba(0,0,0,0.45);
-  border: 1px solid var(--border);
-
-  transition: all 0.25s ease;
-}
-
-.panel-item:hover {
-  transform: translateY(-4px) scale(1.04);
-  box-shadow: 0 10px 25px rgba(79,209,255,0.4);
-  border-color: var(--accent);
-}
-
-.panel-item.ig:hover { color: #ff7ad9; }
-.panel-item.tt:hover { color: #7cffe1; }
-.panel-item.gh:hover { color: #c7c7ff; } 
-
-#adSoyad {
-  margin-top: 20px;
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--accent);
-  text-shadow: 0 0 10px rgba(79,209,255,0.45);
 }
