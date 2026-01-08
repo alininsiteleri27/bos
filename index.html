@@ -68,8 +68,24 @@
 <audio id="successSound" src="sounds/success.mp3"></audio>
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
-<script>
-/* ===== KULLANICILAR ===== */
+<script><script>
+/* ===== ELEMENT TANIMLARI (ŞART) ===== */
+const kullanici = document.getElementById("kullanici");
+const sifre = document.getElementById("sifre");
+const loginBox = document.getElementById("loginBox");
+const panel = document.getElementById("panel");
+const hosgeldin = document.getElementById("hosgeldin");
+const adminPanel = document.getElementById("adminPanel");
+const loglar = document.getElementById("loglar");
+
+const arama = document.getElementById("arama");
+const searchBtn = document.getElementById("searchBtn");
+const ad = document.getElementById("ad");
+const sonuc = document.getElementById("sonuc");
+const sonucFoto = document.getElementById("sonucFoto");
+
+const successSound = document.getElementById("successSound");
+const errorSound = document.getElementById("errorSound");/* ===== KULLANICILAR ===== */
 const users = {
   admin:{sifre:"admin123",rol:"admin"},
   küpra:{sifre:"k123",rol:"user"},
