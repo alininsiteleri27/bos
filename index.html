@@ -56,14 +56,16 @@
   <h4>🟢 Online Kullanıcılar</h4>
   <div id="onlineList"></div>
 
-  <h4>⏰ Kullanıcıların Son Giriş Zamanları</h4>
-  <div id="sonGirisList"></div>
-
-  <h4>📜 Loglar</h4>
-  <div id="loglar"></div>
+  <button id="toggleLog">📜 Giriş & Arama Kayıtlarını Göster/Gizle</button>
+  <div id="loglar" style="display:none;"></div>
 
   <h4>📊 Kim Kimi Kaç Kere Aradı</h4>
   <div id="istatistik"></div>
+
+  <h4>🔑 Kullanıcı Şifre Değiştir</h4>
+  <select id="userSelect"></select>
+  <input type="text" id="newPassword" placeholder="Yeni Şifre">
+  <button onclick="sifreDegistir()">Şifreyi Güncelle</button>
 </section>
 
 </main>
@@ -79,8 +81,11 @@ const loginBox = document.getElementById("loginBox");
 const panel = document.getElementById("panel");
 const hosgeldin = document.getElementById("hosgeldin");
 const adminPanel = document.getElementById("adminPanel");
+const onlineList = document.getElementById("onlineList");
 const loglar = document.getElementById("loglar");
-const sonGirisList = document.getElementById("sonGirisList");
+const istatistik = document.getElementById("istatistik");
+const userSelect = document.getElementById("userSelect");
+const newPassword = document.getElementById("newPassword");
 
 const arama = document.getElementById("arama");
 const searchBtn = document.getElementById("searchBtn");
@@ -122,12 +127,13 @@ const users = {
 
 let aktifKullanici = "";
 let onlineUsers = JSON.parse(localStorage.getItem("onlineUsers")) || [];
-let sonGiris = JSON.parse(localStorage.getItem("sonGiris")) || {};
 let aramaSayac = JSON.parse(localStorage.getItem("aramaSayac")) || [];
 let logKayit = JSON.parse(localStorage.getItem("logKayit")) || [];
 
 /* ===== ZAMAN ===== */
-function time(){ return new Date().toLocaleString("tr-TR"); }
+function time(){
+  return new Date().toLocaleString("tr-TR");
+}
 
 /* ===== LOGIN ===== */
 function giris(){
@@ -140,9 +146,6 @@ function giris(){
     panel.classList.remove("hidden");
     hosgeldin.textContent = "Hoşgeldin " + k.toUpperCase();
 
-    sonGiris[k] = time();
-    localStorage.setItem("sonGiris",JSON.stringify(sonGiris));
-
     if(!onlineUsers.includes(k)) onlineUsers.push(k);
     localStorage.setItem("onlineUsers",JSON.stringify(onlineUsers));
 
@@ -151,6 +154,8 @@ function giris(){
     if(users[k].rol==="admin"){
       adminPanel.classList.remove("hidden");
       adminGuncelle();
+      // Kullanıcı seçimi dropdown
+      userSelect.innerHTML = Object.keys(users).filter(u=>u!=="admin").map(u=>`<option value="${u}">${u}</option>`).join("");
     }
   } else {
     loginHata.textContent="Hatalı giriş";
@@ -175,13 +180,32 @@ function logEkle(metin,kaydet){
   adminGuncelle();
 }
 
-/* ===== ADMIN UPDATE ===== */
+/* ===== ADMIN GÜNCELLE ===== */
 function adminGuncelle(){
   onlineList.innerHTML = onlineUsers.map(u=>`🟢 ${u}`).join("<br>");
   loglar.innerHTML = logKayit.map(l=>`<p>${l}</p>`).join("");
   istatistik.innerHTML = aramaSayac.map(a=>`<p>${a}</p>`).join("");
-  sonGirisList.innerHTML = Object.keys(sonGiris).map(u=>`⏰ ${u}: ${sonGiris[u]}`).join("<br>");
 }
+
+/* ===== ŞİFRE DEĞİŞTİR ===== */
+function sifreDegistir(){
+  const secilen = userSelect.value;
+  const yenisifre = newPassword.value.trim();
+  if(secilen && yenisifre){
+    users[secilen].sifre = yenisifre;
+    newPassword.value = "";
+    alert(`${secilen} kullanıcısının şifresi güncellendi!`);
+  }
+}
+
+/* ===== LOG BUTONU ===== */
+document.getElementById("toggleLog").onclick = ()=>{
+  if(loglar.style.display==="none"){
+    loglar.style.display="block";
+  } else {
+    loglar.style.display="none";
+  }
+};
 
 /* ===== KİŞİLER ===== */
 const kisiler = {
@@ -224,6 +248,7 @@ searchBtn.onclick = ()=>{
 
   if(kisiler[key]){
     const k = kisiler[key];
+
     ad.textContent = k.ad;
     sonuc.textContent = k.mesaj;
     successSound.play();
@@ -234,15 +259,16 @@ searchBtn.onclick = ()=>{
       sonucFoto.classList.add("show");
     },150);
 
-    // admin log ve arama sayacı
+    // log ve sayaç
     logEkle(`🔍 ${aktifKullanici} → ${key}`,true);
-    const index = aramaSayac.findIndex(a=>a.kullanici===aktifKullanici && a.hedef===key);
-    if(index>-1){
-      aramaSayac[index].adet++;
+    let mevcut = aramaSayac.find(a=>a.kisi===key);
+    if(mevcut){
+      mevcut.sayac++;
     } else {
-      aramaSayac.push({kullanici:aktifKullanici,hedef:key,adet:1});
+      aramaSayac.push({kisi:key,sayac:1});
     }
     localStorage.setItem("aramaSayac",JSON.stringify(aramaSayac));
+    adminGuncelle();
   } else {
     sonuc.textContent = "Bulunamadı";
     errorSound.play();
@@ -254,7 +280,7 @@ function darkMode(){
   document.body.classList.toggle("dark");
 }
 
-/* ===== LOGOUT BUTONU ===== */
+/* ===== CIKIS ===== */
 function cikis(){
   onlineUsers = onlineUsers.filter(u=>u!==aktifKullanici);
   localStorage.setItem("onlineUsers",JSON.stringify(onlineUsers));
