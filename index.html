@@ -61,6 +61,9 @@
   <div class="admin-toggle" onclick="toggleSection('istatistikSection')">📊 Arama İstatistikleri</div>
   <div id="istatistikSection" class="hidden"><div id="istatistik"></div></div>
 
+  <div class="admin-toggle" onclick="toggleSection('detaySection')">🧠 Detaylı Arama Geçmişi</div>
+  <div id="detaySection" class="hidden"><div id="aramaDetayDiv"></div></div>
+
   <div class="admin-toggle" onclick="toggleSection('sifreSection')">🔑 Şifre Değiştir</div>
   <div id="sifreSection" class="hidden">
     <select id="sifreUserSelect"></select>
@@ -87,6 +90,7 @@ adminPanel=document.getElementById("adminPanel"),
 loglar=document.getElementById("loglar"),
 onlineList=document.getElementById("onlineList"),
 istatistik=document.getElementById("istatistik"),
+aramaDetayDiv=document.getElementById("aramaDetayDiv"),
 searchBtn=document.getElementById("searchBtn"),
 arama=document.getElementById("arama"),
 ad=document.getElementById("ad"),
@@ -95,13 +99,36 @@ sonucFoto=document.getElementById("sonucFoto"),
 sifreUserSelect=document.getElementById("sifreUserSelect"),
 yeniSifre=document.getElementById("yeniSifre"),
 sifreHata=document.getElementById("sifreHata"),
+loginHata=document.getElementById("loginHata"),
 successSound=document.getElementById("successSound"),
 errorSound=document.getElementById("errorSound");
 
 let users=JSON.parse(localStorage.getItem("users"))||{
   admin:{sifre:"admin123",rol:"admin"},
   küpra:{sifre:"k123",rol:"user"},
-  yusuf:{sifre:"y123",rol:"user"}
+  yusuf:{sifre:"y123",rol:"user"},
+  beyza:{sifre:"b123",rol:"user"},
+  enes:{sifre:"e123",rol:"user"},
+  hira:{sifre:"h123",rol:"user"},
+  hacer:{sifre:"ha123",rol:"user"},
+  deniz:{sifre:"d123",rol:"user"},
+  efe:{sifre:"ef123",rol:"user"},
+  ayhan:{sifre:"a123",rol:"user"},
+  dilber:{sifre:"di123",rol:"user"},
+  samet:{sifre:"s123",rol:"user"},
+  ipek:{sifre:"i123",rol:"user"},
+  esma:{sifre:"es123",rol:"user"},
+  sude:{sifre:"su123",rol:"user"},
+  cehennet:{sifre:"c123",rol:"user"},
+  berke:{sifre:"be123",rol:"user"},
+  emin:{sifre:"em123",rol:"user"},
+  hashüs:{sifre:"haş123",rol:"user"},
+  bünyamin:{sifre:"bü123",rol:"user"},
+  efsa:{sifre:"efsa123",rol:"user"},
+  merve:{sifre:"m123",rol:"user"},
+  cilo:{sifre:"ci123",rol:"user"},
+  emre:{sifre:"er123",rol:"user"},
+  yiğit:{sifre:"yı123",rol:"user"}
 };
 localStorage.setItem("users",JSON.stringify(users));
 
@@ -117,23 +144,15 @@ function logEkle(m){logKayit.unshift(time()+" • "+m);localStorage.setItem("log
 function adminGuncelle(){
   onlineList.innerHTML=Object.keys(onlineUsers).map(u=>"🟢 "+u).join("<br>");
   loglar.innerHTML=logKayit.map(l=>"<p>"+l+"</p>").join("");
+  istatistik.innerHTML=Object.keys(aramaSayac).map(k=>{
+    return Object.keys(aramaSayac[k]).map(h=>{
+      return `<p>${k} → ${h}: ${aramaSayac[k][h]}</p>`;
+    }).join("");
+  }).join("");
 
-  let html="";
-  Object.keys(aramaSayac).forEach(k=>{
-    Object.keys(aramaSayac[k]).forEach(h=>{
-      html+=`<p>${k} → ${h}: ${aramaSayac[k][h]}</p>`;
-    });
-  });
-
-  html+="<hr><h4>⏱ Detaylı Arama Geçmişi</h4>";
-  Object.keys(aramaDetay).forEach(u=>{
-    html+=`<strong>${u}</strong>`;
-    aramaDetay[u].forEach(d=>{
-      html+=`<p>→ ${d.hedef} | ${d.zaman}</p>`;
-    });
-  });
-
-  istatistik.innerHTML=html;
+  aramaDetayDiv.innerHTML=Object.keys(aramaDetay).map(u=>{
+    return `<h4>${u}</h4>`+aramaDetay[u].map(d=>`<p>→ ${d.hedef} | ${d.zaman}</p>`).join("");
+  }).join("");
 }
 
 function giris(){
@@ -167,8 +186,16 @@ function cikis(){
 searchBtn.onclick=()=>{
   const key=arama.value.toLowerCase().trim();
   if(kisiler[key]){
+    const k=kisiler[key];
+    ad.textContent=k.ad;
+    sonuc.textContent=k.mesaj;
+    sonucFoto.src=k.foto;
+    sonucFoto.style.display="block";
+    sonucFoto.classList.add("show");
+
     if(!aramaSayac[aktifKullanici])aramaSayac[aktifKullanici]={};
-    aramaSayac[aktifKullanici][key]=(aramaSayac[aktifKullanici][key]||0)+1;
+    if(!aramaSayac[aktifKullanici][key])aramaSayac[aktifKullanici][key]=0;
+    aramaSayac[aktifKullanici][key]++;
     localStorage.setItem("aramaSayac",JSON.stringify(aramaSayac));
 
     if(!aramaDetay[aktifKullanici])aramaDetay[aktifKullanici]=[];
@@ -180,11 +207,10 @@ searchBtn.onclick=()=>{
 };
 
 function degistirSifre(){
-  const u=sifreUserSelect.value,y=yeniSifre.value.trim();
-  if(!y)return;
-  users[u].sifre=y;
+  if(users[aktifKullanici].rol!=="admin")return;
+  users[sifreUserSelect.value].sifre=yeniSifre.value;
   localStorage.setItem("users",JSON.stringify(users));
-  sifreHata.textContent=u+" şifresi değiştirildi";
+  sifreHata.textContent="Şifre değiştirildi";
 }
 
 function toggleSection(id){document.getElementById(id).classList.toggle("hidden");}
@@ -192,7 +218,29 @@ function darkMode(){document.body.classList.toggle("dark");}
 
 const kisiler={
   küpra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
-  yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"}
+  yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
+  beyza:{ad:"Beyza",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
+  enes:{ad:"Enes",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
+  hira:{ad:"Hira",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
+  hacer:{ad:"Hacer",mesaj:"erkek",foto:"fotos/hacer.jpg"},
+  deniz:{ad:"Deniz",mesaj:"taklitman",foto:"fotos/deniz.jpg"},
+  efe:{ad:"Efe",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
+  ayhan:{ad:"Ayhan",mesaj:"gergin adam",foto:"fotos/ayhan.jpg"},
+  dilber:{ad:"Dilber",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
+  samet:{ad:"Samet",mesaj:"başkan",foto:"fotos/samet.jpg"},
+  ipek:{ad:"İpek",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
+  esma:{ad:"Esma",mesaj:"umrede",foto:"fotos/esma.jpg"},
+  sude:{ad:"Sude",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
+  cehennet:{ad:"Cehennet",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
+  berke:{ad:"Berke",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
+  emin:{ad:"Emin",mesaj:"atatürk",foto:"fotos/emin.jpg"},
+  hashüs:{ad:"Hashüs",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
+  bünyamin:{ad:"Bünyamin",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
+  efsa:{ad:"Efsa",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
+  merve:{ad:"Merve",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
+  cilo:{ad:"Cilo",mesaj:"godfather",foto:"fotos/cilo.jpg"},
+  emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
+  yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
 };
 </script>
 
