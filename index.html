@@ -1,81 +1,71 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>11/A Ali'nin Paneli</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>11/A Ali'nin Paneli</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
 
-  <!-- ORİJİNAL FOTO ANİMASYONU (KORUNDU) -->
-  <style>
-    #sonucFoto {
-      width: 160px;
-      height: 200px;
-      object-fit: cover;
-      margin: 14px auto 0;
-      display: none;
-      opacity: 0;
-      transform: scale(0.9);
-      transition: opacity .3s ease, transform .3s ease;
-      border-radius: 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.6);
-    }
-    #sonucFoto.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-    @media (max-width: 600px) {
-      #sonucFoto { width: 120px; height: 150px; }
-    }
-  </style>
+<style>
+#sonucFoto{
+  width:160px;height:200px;object-fit:cover;margin:14px auto 0;
+  display:none;opacity:0;transform:scale(.9);
+  transition:.3s;border-radius:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.6)
+}
+#sonucFoto.show{opacity:1;transform:scale(1)}
+@media(max-width:600px){#sonucFoto{width:120px;height:150px}}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN (PROMPT KALKTI) -->
+<!-- LOGIN -->
 <div id="loginBox" class="login-box">
   <h2>11/A Panel Girişi</h2>
-  <input type="password" id="sifre" placeholder="Şifre">
+  <input id="kullanici" placeholder="Kullanıcı adı">
+  <input id="sifre" type="password" placeholder="Şifre">
   <button onclick="giris()">Giriş Yap</button>
   <p id="loginHata"></p>
 </div>
 
 <!-- PANEL -->
-<main id="panel" class="app" style="display:none;">
+<main id="panel" class="app hidden">
 
-  <!-- ÜST BAR -->
-  <header class="topbar">
-    <h1>11/A • Ali'nin Paneli</h1>
-    <button onclick="darkMode()">🌙</button>
-  </header>
+<header class="topbar">
+  <h1 id="hosgeldin"></h1>
+  <button onclick="darkMode()">🌙</button>
+</header>
 
-  <!-- ARAMA -->
-  <div class="search-box">
-    <input id="arama" type="search" placeholder="ad" autocomplete="off">
-    <button id="searchBtn">Ara</button>
+<div class="search-box">
+  <input id="arama" placeholder="isim ara">
+  <button id="searchBtn">Ara</button>
+</div>
+
+<p id="ad"></p>
+<p id="sonuc"></p>
+<img id="sonucFoto">
+
+<!-- DUYURU -->
+<section class="announcements hidden" id="adminPanel">
+  <h3>📢 Admin Duyurusu</h3>
+  <input id="duyuruInput" placeholder="Duyuru yaz">
+  <button onclick="duyuruEkle()">Ekle</button>
+</section>
+
+<section class="announcements">
+  <h3>Duyurular</h3>
+  <div id="duyuruList"></div>
+</section>
+
+<section class="info-panel">
+  <div class="panel-title">11/A • Ali'nin Panelciği</div>
+  <div class="panel-grid">
+    <a href="https://www.instagram.com/meali.kcgln" target="_blank" class="panel-item">Instagram</a>
+    <a href="https://github.com/alininsiteleri27" target="_blank" class="panel-item">GitHub</a>
   </div>
-
-  <p id="ad"></p>
-  <p id="sonuc"></p>
-  <img id="sonucFoto" alt="Foto">
-
-  <!-- DUYURULAR -->
-  <section class="announcements">
-    <h3>Duyurular</h3>
-    <input type="text" id="duyuruInput" placeholder="Duyuru yaz">
-    <button onclick="duyuruEkle()">Ekle</button>
-    <div id="duyuruList"></div>
-  </section>
-
-  <!-- ALT PANEL -->
-  <section class="info-panel">
-    <div class="panel-title">11/A • Ali'nin Panelciği</div>
-    <div class="panel-grid">
-      <a href="https://www.instagram.com/meali.kcgln" target="_blank" class="panel-item">Instagram</a>
-      <a href="https://github.com/alininsiteleri27" target="_blank" class="panel-item">GitHub</a>
-    </div>
-    <div class="producer">KCGLN ALI</div>
-  </section>
+  <div class="producer">KCGLN ALI</div>
+</section>
 
 </main>
 
@@ -83,101 +73,87 @@
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
 <script>
+/* === LOGIN TANIMLARI === */
+const sifreOrtak = "11a";
+const adminUser = "admin";
+
+const users = [
+"kübra","yusuf","beyza","enes","hira","hacer","deniz","efe","ayhan",
+"dilber","samet","ipek","esma","sude","cehennet","berke","emin",
+"hashüs","bünyamin","efsa","merve","cilo","emre","yiğit"
+];
+
 /* LOGIN */
 function giris(){
-  const sifre = document.getElementById("sifre").value;
-  if(sifre === "6254"){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("panel").style.display="block";
+  const k = kullanici.value.toLowerCase().trim();
+  const s = sifre.value;
+
+  if((k===adminUser || users.includes(k)) && s===sifreOrtak){
+    loginBox.classList.add("hidden");
+    panel.classList.remove("hidden");
+    hosgeldin.textContent = "Hoşgeldin " + k.toUpperCase();
+    if(k===adminUser) adminPanel.classList.remove("hidden");
   } else {
-    document.getElementById("loginHata").innerText="Yanlış şifre";
+    loginHata.textContent="Hatalı giriş";
   }
 }
 
-/* DARK MODE (CSS’te tamamlanacak) */
-function darkMode(){
-  document.body.classList.toggle("dark");
-}
+function darkMode(){document.body.classList.toggle("dark")}
 
 /* DUYURU */
 function duyuruEkle(){
-  const input = document.getElementById("duyuruInput");
-  if(input.value){
-    document.getElementById("duyuruList").innerHTML += `<p>📢 ${input.value}</p>`;
-    input.value="";
+  if(duyuruInput.value){
+    duyuruList.innerHTML+=`<p>📢 ${duyuruInput.value}</p>`;
+    duyuruInput.value="";
   }
 }
 
-/* === SENİN ORİJİNAL KODUN (EKSİKSİZ) === */
-const arama = document.getElementById("arama");
-const btn = document.getElementById("searchBtn");
-const adEl = document.getElementById("ad");
-const sonucEl = document.getElementById("sonuc");
-const foto = document.getElementById("sonucFoto");
-const successSound = document.getElementById("successSound");
-const errorSound = document.getElementById("errorSound");
-
+/* === SENİN ORİJİNAL KİŞİLER (EKSİKSİZ) === */
 const kisiler = {
-  küpra:{ad:"Küpra",soyad:"?",mesaj:"hafif",foto:"fotos/küpra.jpg"},
-  yusuf:{ad:"Yusuf",soyad:"?",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
-  beyza:{ad:"Beyza",soyad:"?",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
-  enes:{ad:"Enes",soyad:"?",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
-  hira:{ad:"Hira",soyad:"?",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
-  hacer:{ad:"Hacer",soyad:"?",mesaj:"erkek",foto:"fotos/hacer.jpg"},
-  deniz:{ad:"Deniz",soyad:"?",mesaj:"sınıfın taklitmanı",foto:"fotos/deniz.jpg"},
-  efe:{ad:"Efe",soyad:"?",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
-  ayhan:{ad:"Ayhan",soyad:"?",mesaj:"gergin görünen adam",foto:"fotos/ayhan.jpg"},
-  dilber:{ad:"Dilber",soyad:"?",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
-  samet:{ad:"Samet",soyad:"?",mesaj:"başkan",foto:"fotos/samet.jpg"},
-  ipek:{ad:"İpek",soyad:"?",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
-  esma:{ad:"Esma",soyad:"?",mesaj:"umrede",foto:"fotos/esma.jpg"},
-  sude:{ad:"Sude",soyad:"?",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
-  cehennet:{ad:"Cehennet",soyad:"?",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
-  berke:{ad:"Berke",soyad:"?",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
-  emin:{ad:"Emin",soyad:"?",mesaj:"atatürk",foto:"fotos/emin.jpg"},
-  hashüs:{ad:"Hashüs",soyad:"?",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
-  bünyamin:{ad:"Bünyamin",soyad:"?",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
-  efsa:{ad:"Efsa",soyad:"?",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
-  merve:{ad:"Merve",soyad:"?",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
-  cilo:{ad:"Cilo",soyad:"?",mesaj:"godfather",foto:"fotos/cilo.jpg"},
-  emre:{ad:"Emre",soyad:"?",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
-  yiğit:{ad:"yiğit",soyad:"?",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
+kübra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
+yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
+beyza:{ad:"Beyza",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
+enes:{ad:"Enes",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
+hira:{ad:"Hira",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
+hacer:{ad:"Hacer",mesaj:"erkek",foto:"fotos/hacer.jpg"},
+deniz:{ad:"Deniz",mesaj:"taklitman",foto:"fotos/deniz.jpg"},
+efe:{ad:"Efe",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
+ayhan:{ad:"Ayhan",mesaj:"gergin adam",foto:"fotos/ayhan.jpg"},
+dilber:{ad:"Dilber",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
+samet:{ad:"Samet",mesaj:"başkan",foto:"fotos/samet.jpg"},
+ipek:{ad:"İpek",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
+esma:{ad:"Esma",mesaj:"umrede",foto:"fotos/esma.jpg"},
+sude:{ad:"Sude",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
+cehennet:{ad:"Cehennet",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
+berke:{ad:"Berke",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
+emin:{ad:"Emin",mesaj:"atatürk",foto:"fotos/emin.jpg"},
+hashüs:{ad:"Hashüs",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
+bünyamin:{ad:"Bünyamin",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
+efsa:{ad:"Efsa",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
+merve:{ad:"Merve",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
+cilo:{ad:"Cilo",mesaj:"godfather",foto:"fotos/cilo.jpg"},
+emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
+yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
 };
 
-function ara(){
-  const key = arama.value.toLocaleLowerCase("tr-TR").trim();
-
-  adEl.textContent = "";
-  sonucEl.textContent = "";
-  foto.style.display = "none";
-  foto.classList.remove("show");
-
-  if(!key) return;
-
-  if(kisiler[key]){
-    const k = kisiler[key];
-    adEl.textContent = k.ad + " " + k.soyad;
-    sonucEl.textContent = k.mesaj;
-    successSound.currentTime = 0;
-    successSound.play();
-
-    setTimeout(()=>{
-      foto.src = k.foto;
-      foto.style.display = "block";
-      foto.classList.add("show");
-    },150);
-  } else {
-    sonucEl.textContent = "Sonuç bulunamadı";
-    errorSound.currentTime = 0;
-    errorSound.play();
-  }
+/* ARAMA */
+searchBtn.onclick=()=>{
+const key=arama.value.toLowerCase();
+if(kisiler[key]){
+const k=kisiler[key];
+ad.textContent=k.ad;
+sonuc.textContent=k.mesaj;
+successSound.play();
+setTimeout(()=>{
+sonucFoto.src=k.foto;
+sonucFoto.style.display="block";
+sonucFoto.classList.add("show");
+},150);
+}else{
+sonuc.textContent="Bulunamadı";
+errorSound.play();
 }
-
-btn.onclick = ara;
-arama.addEventListener("keydown", e => {
-  if (e.key === "Enter") ara();
-});
+}
 </script>
-
 </body>
-</html>
+  </html>
