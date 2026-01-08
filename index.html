@@ -159,20 +159,34 @@ function adminGuncelle(){
 }
 
 /* ===== ARAMA ===== */
-searchBtn.onclick=()=>{
+<script>
+searchBtn.onclick = ()=>{
   const key = arama.value.toLowerCase().trim();
-  if(!key) return;
 
-  ad.textContent = key;
-  sonuc.textContent = "Bulundu";
-  successSound.play();
+  // önce reset
+  sonucFoto.classList.remove("show");
+  sonucFoto.style.display = "none";
+  sonucFoto.src = "";
+  ad.textContent = "";
+  sonuc.textContent = "";
 
-  aramaSayac.unshift(`${time()} • ${aktifKullanici} → ${key}`);
-  localStorage.setItem("aramaSayac",JSON.stringify(aramaSayac));
+  if(kisiler[key]){
+    const k = kisiler[key];
 
-  logEkle(`🔍 ${aktifKullanici} ${key} aradı`,true);
+    ad.textContent = k.ad;
+    sonuc.textContent = k.mesaj;
+    successSound.play();
+
+    setTimeout(()=>{
+      sonucFoto.src = k.foto;
+      sonucFoto.style.display = "block";
+      sonucFoto.classList.add("show");
+    },150);
+
+    logEkle("🔍 "+aktifKullanici+" → "+key+" aradı");
+  } else {
+    sonuc.textContent = "Bulunamadı";
+    errorSound.play();
+  }
 };
 </script>
-
-</body>
-  </html>
