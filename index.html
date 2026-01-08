@@ -5,12 +5,18 @@
 <title>11/A Ali'nin Paneli</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
+
 <style>
-#sonucFoto{width:160px;height:200px;object-fit:cover;margin:14px auto 0;display:none;opacity:0;transform:scale(.9);transition:.3s;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+#sonucFoto{
+  width:160px;height:200px;object-fit:cover;margin:14px auto 0;
+  display:none;opacity:0;transform:scale(.9);
+  transition:.3s;border-radius:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.6)
+}
 #sonucFoto.show{opacity:1;transform:scale(1)}
 @media(max-width:600px){#sonucFoto{width:120px;height:150px}}
-.hidden{display:none}
-.admin-toggle{cursor:pointer;color:var(--accent);font-weight:700;margin-bottom:6px;display:inline-block}
+.hidden{display:none;}
+.admin-toggle{cursor:pointer;color:var(--accent);font-weight:700;margin-bottom:6px;display:inline-block;}
 </style>
 </head>
 
@@ -25,6 +31,7 @@
 </div>
 
 <main id="panel" class="app hidden">
+
 <header class="topbar">
   <h1 id="hosgeldin"></h1>
   <div>
@@ -51,7 +58,7 @@
   <div class="admin-toggle" onclick="toggleSection('logSection')">📜 Loglar</div>
   <div id="logSection" class="hidden"><div id="loglar"></div></div>
 
-  <div class="admin-toggle" onclick="toggleSection('istatistikSection')">📊 Arama İstatistik</div>
+  <div class="admin-toggle" onclick="toggleSection('istatistikSection')">📊 Kim Kimi Aradı</div>
   <div id="istatistikSection" class="hidden"><div id="istatistik"></div></div>
 
   <div class="admin-toggle" onclick="toggleSection('sifreSection')">🔑 Şifre Değiştir</div>
@@ -62,9 +69,11 @@
     <p id="sifreHata"></p>
   </div>
 </section>
+
 </main>
 
 <script>
+/* ===== ELEMENTLER ===== */
 const kullanici=document.getElementById("kullanici"),
 sifre=document.getElementById("sifre"),
 loginBox=document.getElementById("loginBox"),
@@ -83,6 +92,7 @@ sifreUserSelect=document.getElementById("sifreUserSelect"),
 yeniSifre=document.getElementById("yeniSifre"),
 sifreHata=document.getElementById("sifreHata");
 
+/* ===== USERS (KALICI) ===== */
 let users = JSON.parse(localStorage.getItem("users")) || {
   admin:{sifre:"admin123",rol:"admin"},
   küpra:{sifre:"k123",rol:"user"},
@@ -112,6 +122,7 @@ let users = JSON.parse(localStorage.getItem("users")) || {
 };
 localStorage.setItem("users",JSON.stringify(users));
 
+/* ===== STATES ===== */
 let aktifKullanici="";
 let onlineUsers=JSON.parse(localStorage.getItem("onlineUsers"))||{};
 let aramaSayac=JSON.parse(localStorage.getItem("aramaSayac"))||{};
@@ -119,6 +130,7 @@ let logKayit=JSON.parse(localStorage.getItem("logKayit"))||[];
 
 const time=()=>new Date().toLocaleString("tr-TR");
 
+/* ===== LOGIN ===== */
 function giris(){
   const k=kullanici.value.toLowerCase().trim();
   if(users[k]&&users[k].sifre===sifre.value){
@@ -132,20 +144,42 @@ function giris(){
       adminPanel.classList.remove("hidden");
       sifreUserSelect.innerHTML=Object.keys(users).filter(u=>u!=="admin").map(u=>`<option>${u}</option>`).join("");
     }
-  }
+  }else loginHata.textContent="Hatalı giriş";
 }
 
+/* ===== LOGOUT ===== */
 function cikis(){
   delete onlineUsers[aktifKullanici];
   localStorage.setItem("onlineUsers",JSON.stringify(onlineUsers));
   location.reload();
 }
 
+/* ===== SEARCH ===== */
+searchBtn.onclick=()=>{
+  const key=arama.value.toLowerCase().trim();
+  sonucFoto.style.display="none";
+  sonucFoto.classList.remove("show");
+  if(kisiler[key]){
+    ad.textContent=kisiler[key].ad;
+    sonuc.textContent=kisiler[key].mesaj;
+    setTimeout(()=>{
+      sonucFoto.src=kisiler[key].foto;
+      sonucFoto.style.display="block";
+      sonucFoto.classList.add("show");
+    },100);
+  }else{
+    ad.textContent="";
+    sonuc.textContent="Bulunamadı";
+  }
+};
+
+/* ===== ADMIN ===== */
 function degistirSifre(){
   if(users[aktifKullanici].rol!=="admin")return;
   const u=sifreUserSelect.value;
-  if(!yeniSifre.value.trim())return;
-  users[u].sifre=yeniSifre.value.trim();
+  const y=yeniSifre.value.trim();
+  if(!y)return;
+  users[u].sifre=y;
   localStorage.setItem("users",JSON.stringify(users));
   sifreHata.textContent="Şifre değiştirildi";
   yeniSifre.value="";
@@ -154,6 +188,35 @@ function degistirSifre(){
 function toggleSection(id){
   document.getElementById(id).classList.toggle("hidden");
 }
+
+/* ===== KİŞİLER ===== */
+const kisiler={
+  küpra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
+  yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
+  beyza:{ad:"Beyza",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
+  enes:{ad:"Enes",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
+  hira:{ad:"Hira",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
+  hacer:{ad:"Hacer",mesaj:"erkek",foto:"fotos/hacer.jpg"},
+  deniz:{ad:"Deniz",mesaj:"taklitman",foto:"fotos/deniz.jpg"},
+  efe:{ad:"Efe",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
+  ayhan:{ad:"Ayhan",mesaj:"gergin adam",foto:"fotos/ayhan.jpg"},
+  dilber:{ad:"Dilber",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
+  samet:{ad:"Samet",mesaj:"başkan",foto:"fotos/samet.jpg"},
+  ipek:{ad:"İpek",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
+  esma:{ad:"Esma",mesaj:"umrede",foto:"fotos/esma.jpg"},
+  sude:{ad:"Sude",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
+  cehennet:{ad:"Cehennet",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
+  berke:{ad:"Berke",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
+  emin:{ad:"Emin",mesaj:"atatürk",foto:"fotos/emin.jpg"},
+  hashüs:{ad:"Hashüs",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
+  bünyamin:{ad:"Bünyamin",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
+  efsa:{ad:"Efsa",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
+  merve:{ad:"Merve",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
+  cilo:{ad:"Cilo",mesaj:"godfather",foto:"fotos/cilo.jpg"},
+  emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
+  yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
+};
 </script>
+
 </body>
 </html>
