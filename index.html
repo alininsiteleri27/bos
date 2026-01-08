@@ -133,7 +133,7 @@ let users = JSON.parse(localStorage.getItem("users")) || {
 let aktifKullanici = "";
 let onlineUsers = JSON.parse(localStorage.getItem("onlineUsers")) || {};
 let aramaSayac = JSON.parse(localStorage.getItem("aramaSayac")) || {};
-let logKayit = JSON.parse(localStorage.getItem("logKayit")) || [];
+let logKayit = JSON.parse(localStorage.getItem("logKayit")) || {};
 
 /* ===== ZAMAN ===== */
 function time(){ return new Date().toLocaleString("tr-TR"); }
@@ -151,7 +151,7 @@ function giris(){
     users[k].lastLogin = time();
     localStorage.setItem("users", JSON.stringify(users));
 
-    onlineUsers[k] = users[k].lastLogin;
+    onlineUsers[k] = true; // Sadece aktif olduğunu gösteriyoruz
     localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
 
     logEkle(`🔐 ${k} giriş yaptı`,true);
@@ -186,11 +186,20 @@ function logEkle(metin,kaydet){
 
 /* ===== ADMIN PANEL UPDATE ===== */
 function adminGuncelle(){
-  onlineList.innerHTML = Object.keys(onlineUsers).map(u=>`🟢 ${u} (Son Giriş: ${onlineUsers[u]})`).join("<br>");
+  // Aktif kullanıcıları göster
+  onlineList.innerHTML = Object.keys(onlineUsers).map(u=>`🟢 ${u}`).join("<br>");
+  
+  // Logları göster
   loglar.innerHTML = logKayit.map(l=>`<p>${l}</p>`).join("");
-  istatistik.innerHTML = Object.keys(aramaSayac).map(u=>{
-    return Object.keys(aramaSayac[u]).map(a=>`<p>${u} → ${a}: ${aramaSayac[u][a]}</p>`).join("");
-  }).join("");
+
+  // Arama istatistikleri
+  let html = "";
+  for(let user in aramaSayac){
+    for(let target in aramaSayac[user]){
+      html += `<p>${user} → ${target}: ${aramaSayac[user][target]}</p>`;
+    }
+  }
+  istatistik.innerHTML = html;
 }
 
 /* ===== ARAMA ===== */
@@ -224,7 +233,7 @@ searchBtn.onclick = ()=>{
   }
 };
 
-/* ===== KULLANICI ŞİFRESİ DEĞİŞTİRME (DÜZELTİLDİ) ===== */
+/* ===== KULLANICI ŞİFRESİ DEĞİŞTİRME ===== */
 function degistirSifre(){
   const secilen = sifreUserSelect.value;
   const yenisi = yeniSifre.value.trim();
@@ -232,7 +241,6 @@ function degistirSifre(){
     sifreHata.textContent="Boş bırakılamaz"; 
     return; 
   }
-  // Şifreyi users objesine ve localStorage'a kaydet
   users[secilen].sifre = yenisi;
   localStorage.setItem("users", JSON.stringify(users));
 
