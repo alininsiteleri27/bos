@@ -46,25 +46,17 @@
 <p id="sonuc"></p>
 <img id="sonucFoto">
 
-<!-- DUYURU -->
-<section class="announcements hidden" id="adminPanel">
-  <h3>📢 Admin Duyurusu</h3>
-  <input id="duyuruInput" placeholder="Duyuru yaz">
-  <button onclick="duyuruEkle()">Ekle</button>
+<!-- ADMIN PANEL -->
+<section id="adminPanel" class="announcements hidden">
+  <h3>👑 Admin Paneli</h3>
+  <h4>📜 Giriş & Arama Kayıtları</h4>
+  <div id="loglar"></div>
 </section>
 
+<!-- DUYURULAR -->
 <section class="announcements">
   <h3>Duyurular</h3>
   <div id="duyuruList"></div>
-</section>
-
-<section class="info-panel">
-  <div class="panel-title">11/A • Ali'nin Panelciği</div>
-  <div class="panel-grid">
-    <a href="https://www.instagram.com/meali.kcgln" target="_blank" class="panel-item">Instagram</a>
-    <a href="https://github.com/alininsiteleri27" target="_blank" class="panel-item">GitHub</a>
-  </div>
-  <div class="producer">KCGLN ALI</div>
 </section>
 
 </main>
@@ -73,87 +65,116 @@
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
 <script>
-/* === LOGIN TANIMLARI === */
-const sifreOrtak = "11a";
-const adminUser = "admin";
+/* ===== KULLANICILAR (HERKESE AYRI ŞİFRE) ===== */
+const users = {
+  admin:{sifre:"admin123",rol:"admin"},
+  küpra:{sifre:"k123",rol:"user"},
+  yusuf:{sifre:"y123",rol:"user"},
+  beyza:{sifre:"b123",rol:"user"},
+  enes:{sifre:"e123",rol:"user"},
+  hira:{sifre:"h123",rol:"user"},
+  hacer:{sifre:"ha123",rol:"user"},
+  deniz:{sifre:"d123",rol:"user"},
+  efe:{sifre:"ef123",rol:"user"},
+  ayhan:{sifre:"a123",rol:"user"},
+  dilber:{sifre:"di123",rol:"user"},
+  samet:{sifre:"s123",rol:"user"},
+  ipek:{sifre:"i123",rol:"user"},
+  esma:{sifre:"es123",rol:"user"},
+  sude:{sifre:"su123",rol:"user"},
+  cehennet:{sifre:"c123",rol:"user"},
+  berke:{sifre:"be123",rol:"user"},
+  emin:{sifre:"em123",rol:"user"},
+  hashüs:{sifre:"haş123",rol:"user"},
+  bünyamin:{sifre:"bü123",rol:"user"},
+  efsa:{sifre:"efsa123",rol:"user"},
+  merve:{sifre:"m123",rol:"user"},
+  cilo:{sifre:"ci123",rol:"user"},
+  emre:{sifre:"er123",rol:"user"},
+  yiğit:{sifre:"yı123",rol:"user"}
+};
 
-const users = [
-"kübra","yusuf","beyza","enes","hira","hacer","deniz","efe","ayhan",
-"dilber","samet","ipek","esma","sude","cehennet","berke","emin",
-"hashüs","bünyamin","efsa","merve","cilo","emre","yiğit"
-];
+let aktifKullanici = "";
 
-/* LOGIN */
+/* ===== LOGIN ===== */
 function giris(){
   const k = kullanici.value.toLowerCase().trim();
   const s = sifre.value;
 
-  if((k===adminUser || users.includes(k)) && s===sifreOrtak){
+  if(users[k] && users[k].sifre === s){
+    aktifKullanici = k;
     loginBox.classList.add("hidden");
     panel.classList.remove("hidden");
     hosgeldin.textContent = "Hoşgeldin " + k.toUpperCase();
-    if(k===adminUser) adminPanel.classList.remove("hidden");
+
+    logEkle("🔐 Giriş yaptı: " + k);
+
+    if(users[k].rol === "admin"){
+      adminPanel.classList.remove("hidden");
+    }
   } else {
     loginHata.textContent="Hatalı giriş";
   }
 }
 
-function darkMode(){document.body.classList.toggle("dark")}
-
-/* DUYURU */
-function duyuruEkle(){
-  if(duyuruInput.value){
-    duyuruList.innerHTML+=`<p>📢 ${duyuruInput.value}</p>`;
-    duyuruInput.value="";
-  }
+function darkMode(){
+  document.body.classList.toggle("dark");
 }
 
-/* === SENİN ORİJİNAL KİŞİLER (EKSİKSİZ) === */
+/* ===== LOG SİSTEMİ ===== */
+function logEkle(metin){
+  const p = document.createElement("p");
+  p.textContent = metin;
+  loglar.prepend(p);
+}
+
+/* ===== KİŞİLER (EKSİKSİZ) ===== */
 const kisiler = {
-kübra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
-yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
-beyza:{ad:"Beyza",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
-enes:{ad:"Enes",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
-hira:{ad:"Hira",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
-hacer:{ad:"Hacer",mesaj:"erkek",foto:"fotos/hacer.jpg"},
-deniz:{ad:"Deniz",mesaj:"taklitman",foto:"fotos/deniz.jpg"},
-efe:{ad:"Efe",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
-ayhan:{ad:"Ayhan",mesaj:"gergin adam",foto:"fotos/ayhan.jpg"},
-dilber:{ad:"Dilber",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
-samet:{ad:"Samet",mesaj:"başkan",foto:"fotos/samet.jpg"},
-ipek:{ad:"İpek",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
-esma:{ad:"Esma",mesaj:"umrede",foto:"fotos/esma.jpg"},
-sude:{ad:"Sude",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
-cehennet:{ad:"Cehennet",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
-berke:{ad:"Berke",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
-emin:{ad:"Emin",mesaj:"atatürk",foto:"fotos/emin.jpg"},
-hashüs:{ad:"Hashüs",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
-bünyamin:{ad:"Bünyamin",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
-efsa:{ad:"Efsa",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
-merve:{ad:"Merve",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
-cilo:{ad:"Cilo",mesaj:"godfather",foto:"fotos/cilo.jpg"},
-emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
-yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
+  küpra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
+  yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
+  beyza:{ad:"Beyza",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
+  enes:{ad:"Enes",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
+  hira:{ad:"Hira",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
+  hacer:{ad:"Hacer",mesaj:"erkek",foto:"fotos/hacer.jpg"},
+  deniz:{ad:"Deniz",mesaj:"taklitman",foto:"fotos/deniz.jpg"},
+  efe:{ad:"Efe",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
+  ayhan:{ad:"Ayhan",mesaj:"gergin adam",foto:"fotos/ayhan.jpg"},
+  dilber:{ad:"Dilber",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
+  samet:{ad:"Samet",mesaj:"başkan",foto:"fotos/samet.jpg"},
+  ipek:{ad:"İpek",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
+  esma:{ad:"Esma",mesaj:"umrede",foto:"fotos/esma.jpg"},
+  sude:{ad:"Sude",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
+  cehennet:{ad:"Cehennet",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
+  berke:{ad:"Berke",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
+  emin:{ad:"Emin",mesaj:"atatürk",foto:"fotos/emin.jpg"},
+  hashüs:{ad:"Hashüs",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
+  bünyamin:{ad:"Bünyamin",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
+  efsa:{ad:"Efsa",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
+  merve:{ad:"Merve",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
+  cilo:{ad:"Cilo",mesaj:"godfather",foto:"fotos/cilo.jpg"},
+  emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
+  yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
 };
 
-/* ARAMA */
-searchBtn.onclick=()=>{
-const key=arama.value.toLowerCase();
-if(kisiler[key]){
-const k=kisiler[key];
-ad.textContent=k.ad;
-sonuc.textContent=k.mesaj;
-successSound.play();
-setTimeout(()=>{
-sonucFoto.src=k.foto;
-sonucFoto.style.display="block";
-sonucFoto.classList.add("show");
-},150);
-}else{
-sonuc.textContent="Bulunamadı";
-errorSound.play();
-}
-}
+/* ===== ARAMA ===== */
+searchBtn.onclick = ()=>{
+  const key = arama.value.toLowerCase().trim();
+  if(kisiler[key]){
+    const k = kisiler[key];
+    ad.textContent = k.ad;
+    sonuc.textContent = k.mesaj;
+    successSound.play();
+    setTimeout(()=>{
+      sonucFoto.src = k.foto;
+      sonucFoto.style.display="block";
+      sonucFoto.classList.add("show");
+    },150);
+    logEkle("🔍 "+aktifKullanici+" → "+key+" aradı");
+  } else {
+    sonuc.textContent="Bulunamadı";
+    errorSound.play();
+  }
+};
 </script>
 </body>
-  </html>
+</html>
