@@ -133,7 +133,7 @@ let users = JSON.parse(localStorage.getItem("users")) || {
 let aktifKullanici = "";
 let onlineUsers = JSON.parse(localStorage.getItem("onlineUsers")) || {};
 let aramaSayac = JSON.parse(localStorage.getItem("aramaSayac")) || {};
-let logKayit = JSON.parse(localStorage.getItem("logKayit")) || {};
+let logKayit = JSON.parse(localStorage.getItem("logKayit")) || [];
 
 /* ===== ZAMAN ===== */
 function time(){ return new Date().toLocaleString("tr-TR"); }
@@ -147,19 +147,19 @@ function giris(){
     loginBox.classList.add("hidden");
     panel.classList.remove("hidden");
     hosgeldin.textContent = "Hoşgeldin " + k.toUpperCase();
-    
+
     users[k].lastLogin = time();
     localStorage.setItem("users", JSON.stringify(users));
 
-    onlineUsers[k] = true; // Sadece aktif olduğunu gösteriyoruz
+    onlineUsers[k] = true; // Aktif kullanıcı
     localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
 
-    logEkle(`🔐 ${k} giriş yaptı`,true);
+    logEkle(`🔐 ${k} giriş yaptı`, true);
 
     if(users[k].rol==="admin"){
       adminPanel.classList.remove("hidden");
-      adminGuncelle();
       sifreUserSelect.innerHTML = Object.keys(users).filter(u=>u!=="admin").map(u=>`<option value="${u}">${u}</option>`).join("");
+      adminGuncelle();
     }
   } else {
     loginHata.textContent="Hatalı giriş";
@@ -168,9 +168,9 @@ function giris(){
 
 /* ===== LOGOUT ===== */
 function cikis(){
-  delete onlineUsers[aktifKullanici];
+  onlineUsers[aktifKullanici] = false; // çıkış yapan kullanıcı artık aktif değil
   localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
-  logEkle(`🚪 ${aktifKullanici} çıkış yaptı`,true);
+  logEkle(`🚪 ${aktifKullanici} çıkış yaptı`, true);
   location.reload();
 }
 
@@ -184,11 +184,17 @@ function logEkle(metin,kaydet){
   adminGuncelle();
 }
 
-/* ===== ADMIN PANEL UPDATE ===== */
+/* ===== ADMIN PANEL UPDATE (DÜZELTİLDİ) ===== */
 function adminGuncelle(){
   // Aktif kullanıcıları göster
-  onlineList.innerHTML = Object.keys(onlineUsers).map(u=>`🟢 ${u}`).join("<br>");
-  
+  let onlineHtml = "";
+  for(let user in onlineUsers){
+    if(onlineUsers[user]){
+      onlineHtml += `🟢 ${user} (Son Giriş: ${users[user].lastLogin})<br>`;
+    }
+  }
+  onlineList.innerHTML = onlineHtml || "Hiç kimse online değil.";
+
   // Logları göster
   loglar.innerHTML = logKayit.map(l=>`<p>${l}</p>`).join("");
 
@@ -199,7 +205,7 @@ function adminGuncelle(){
       html += `<p>${user} → ${target}: ${aramaSayac[user][target]}</p>`;
     }
   }
-  istatistik.innerHTML = html;
+  istatistik.innerHTML = html || "<p>Henüz arama yapılmadı.</p>";
 }
 
 /* ===== ARAMA ===== */
@@ -231,7 +237,7 @@ searchBtn.onclick = ()=>{
     sonuc.textContent="Bulunamadı";
     errorSound.play();
   }
-};
+}
 
 /* ===== KULLANICI ŞİFRESİ DEĞİŞTİRME ===== */
 function degistirSifre(){
@@ -243,10 +249,9 @@ function degistirSifre(){
   }
   users[secilen].sifre = yenisi;
   localStorage.setItem("users", JSON.stringify(users));
-
   sifreHata.textContent=`${secilen} şifresi değiştirildi!`;
   yeniSifre.value="";
-  logEkle(`🔑 Admin ${secilen} şifresini değiştirdi`,true);
+  logEkle(`🔑 Admin ${secilen} şifresini değiştirdi`, true);
 }
 
 /* ===== ADMIN SECTION TOGGLE ===== */
