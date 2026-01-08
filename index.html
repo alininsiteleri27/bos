@@ -56,11 +56,11 @@
   <button id="toggleOnline">🟢 Online Kullanıcıları Göster/Gizle</button>
   <div id="onlineList" style="display:none;"></div>
 
-  <button id="toggleLog">📜 Giriş & Arama Kayıtlarını Göster/Gizle</button>
+  <button id="toggleLog">📜 Logları Göster/Gizle</button>
   <div id="loglar" style="display:none;"></div>
 
-  <h4>📊 Kim Kimi Kaç Kere Aradı</h4>
-  <div id="istatistik"></div>
+  <button id="toggleArama">📊 Kim Kimi Kaç Kez Aradı</button>
+  <div id="istatistik" style="display:none;"></div>
 
   <h4>🔑 Kullanıcı Şifre Değiştir</h4>
   <select id="userSelect"></select>
@@ -97,8 +97,8 @@ const sonucFoto = document.getElementById("sonucFoto");
 const successSound = document.getElementById("successSound");
 const errorSound = document.getElementById("errorSound");
 
-/* ===== KULLANICILAR ===== */
-const users = {
+/* ===== KULLANICILAR (localStorage ile kalıcı) ===== */
+let users = JSON.parse(localStorage.getItem("users")) || {
   admin:{sifre:"admin123",rol:"admin"},
   küpra:{sifre:"k123",rol:"user"},
   yusuf:{sifre:"y123",rol:"user"},
@@ -125,6 +125,7 @@ const users = {
   emre:{sifre:"er123",rol:"user"},
   yiğit:{sifre:"yı123",rol:"user"}
 };
+localStorage.setItem("users",JSON.stringify(users));
 
 let aktifKullanici = "";
 let onlineUsers = JSON.parse(localStorage.getItem("onlineUsers")) || [];
@@ -192,6 +193,7 @@ updatePassBtn.onclick = ()=>{
   const yenisifre = newPassword.value.trim();
   if(secilen && yenisifre){
     users[secilen].sifre = yenisifre;
+    localStorage.setItem("users",JSON.stringify(users));
     newPassword.value = "";
     alert(`${secilen} kullanıcısının şifresi güncellendi!`);
     logEkle(`🔑 Admin ${secilen} kullanıcısının şifresini değiştirdi`,true);
@@ -199,12 +201,9 @@ updatePassBtn.onclick = ()=>{
 };
 
 /* ===== LOG VE ONLINE TOGGLE ===== */
-document.getElementById("toggleLog").onclick = ()=>{
-  loglar.style.display = (loglar.style.display==="none")?"block":"none";
-};
-document.getElementById("toggleOnline").onclick = ()=>{
-  onlineList.style.display = (onlineList.style.display==="none")?"block":"none";
-};
+document.getElementById("toggleLog").onclick = ()=>{ loglar.style.display = (loglar.style.display==="none")?"block":"none"; };
+document.getElementById("toggleOnline").onclick = ()=>{ onlineList.style.display = (onlineList.style.display==="none")?"block":"none"; };
+document.getElementById("toggleArama").onclick = ()=>{ istatistik.style.display = (istatistik.style.display==="none")?"block":"none"; };
 
 /* ===== KİŞİLER ===== */
 const kisiler = {
@@ -274,9 +273,7 @@ searchBtn.onclick = ()=>{
 };
 
 /* ===== DARK MODE ===== */
-function darkMode(){
-  document.body.classList.toggle("dark");
-}
+function darkMode(){ document.body.classList.toggle("dark"); }
 </script>
 </body>
-</html>
+  </html>
