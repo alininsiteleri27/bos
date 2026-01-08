@@ -231,3 +231,7 @@ body.dark {
     linear-gradient(rgba(0,0,0,.85), rgba(0,0,0,.85)),
     url("fotos/shelby.jpg") center/cover no-repeat fixed;
 }
+/* ===== GİZLEME SINIFI ===== */
+.hidden {
+  display: none !important;
+}
