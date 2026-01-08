@@ -76,6 +76,10 @@
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
 <script>
+  // SAYFA YENİLENİNCE OTURUM SIFIRLA
+window.addEventListener("load", () => {
+  localStorage.removeItem("onlineUsers");
+});
 /* ===== ELEMENTLER ===== */
 const kullanici=document.getElementById("kullanici"),
 sifre=document.getElementById("sifre"),
