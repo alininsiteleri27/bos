@@ -101,7 +101,7 @@ const successSound = document.getElementById("successSound");
 const errorSound = document.getElementById("errorSound");
 
 /* ===== KULLANICILAR ===== */
-const users = {
+let users = JSON.parse(localStorage.getItem("users")) || {
   admin:{sifre:"admin123",rol:"admin",lastLogin:null},
   küpra:{sifre:"k123",rol:"user",lastLogin:null},
   yusuf:{sifre:"y123",rol:"user",lastLogin:null},
@@ -129,6 +129,7 @@ const users = {
   yiğit:{sifre:"yı123",rol:"user",lastLogin:null}
 };
 
+/* ===== DURUMLAR ===== */
 let aktifKullanici = "";
 let onlineUsers = JSON.parse(localStorage.getItem("onlineUsers")) || {};
 let aramaSayac = JSON.parse(localStorage.getItem("aramaSayac")) || {};
@@ -148,7 +149,9 @@ function giris(){
     hosgeldin.textContent = "Hoşgeldin " + k.toUpperCase();
     
     users[k].lastLogin = time();
-    if(!onlineUsers[k]) onlineUsers[k] = users[k].lastLogin;
+    localStorage.setItem("users", JSON.stringify(users));
+
+    onlineUsers[k] = users[k].lastLogin;
     localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
 
     logEkle(`🔐 ${k} giriş yaptı`,true);
@@ -221,12 +224,18 @@ searchBtn.onclick = ()=>{
   }
 };
 
-/* ===== KULLANICI ŞİFRESİ DEĞİŞTİRME ===== */
+/* ===== KULLANICI ŞİFRESİ DEĞİŞTİRME (DÜZELTİLDİ) ===== */
 function degistirSifre(){
   const secilen = sifreUserSelect.value;
   const yenisi = yeniSifre.value.trim();
-  if(!yenisi){ sifreHata.textContent="Boş bırakılamaz"; return; }
-  users[secilen].sifre=yenisi;
+  if(!yenisi){ 
+    sifreHata.textContent="Boş bırakılamaz"; 
+    return; 
+  }
+  // Şifreyi users objesine ve localStorage'a kaydet
+  users[secilen].sifre = yenisi;
+  localStorage.setItem("users", JSON.stringify(users));
+
   sifreHata.textContent=`${secilen} şifresi değiştirildi!`;
   yeniSifre.value="";
   logEkle(`🔑 Admin ${secilen} şifresini değiştirdi`,true);
@@ -268,4 +277,4 @@ const kisiler = {
 </script>
 
 </body>
-  </html>
+</html>
