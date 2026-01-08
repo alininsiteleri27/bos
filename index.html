@@ -5,7 +5,6 @@
 <title>11/A Ali'nin Paneli</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
-
 <style>
 #sonucFoto{
   width:160px;height:200px;object-fit:cover;margin:14px auto 0;
@@ -22,7 +21,6 @@
 
 <body>
 
-<!-- LOGIN -->
 <div id="loginBox" class="login-box">
   <h2>11/A Panel Girişi</h2>
   <input id="kullanici" placeholder="Kullanıcı adı">
@@ -31,7 +29,6 @@
   <p id="loginHata"></p>
 </div>
 
-<!-- PANEL -->
 <main id="panel" class="app hidden">
 
 <header class="topbar">
@@ -51,7 +48,6 @@
 <p id="sonuc"></p>
 <img id="sonucFoto">
 
-<!-- ADMIN PANEL -->
 <section id="adminPanel" class="announcements hidden">
   <h3>👑 Admin Paneli</h3>
 
@@ -79,7 +75,6 @@
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
 <script>
-/* ===== ELEMENTLER ===== */
 const kullanici = document.getElementById("kullanici");
 const sifre = document.getElementById("sifre");
 const loginBox = document.getElementById("loginBox");
@@ -135,10 +130,8 @@ let onlineUsers = JSON.parse(localStorage.getItem("onlineUsers")) || {};
 let aramaSayac = JSON.parse(localStorage.getItem("aramaSayac")) || {};
 let logKayit = JSON.parse(localStorage.getItem("logKayit")) || [];
 
-/* ===== ZAMAN ===== */
 function time(){ return new Date().toLocaleString("tr-TR"); }
 
-/* ===== LOGIN ===== */
 function giris(){
   const k = kullanici.value.toLowerCase().trim();
   const s = sifre.value;
@@ -151,7 +144,7 @@ function giris(){
     users[k].lastLogin = time();
     localStorage.setItem("users", JSON.stringify(users));
 
-    onlineUsers[k] = true; // sadece aktif mi değil mi
+    onlineUsers[k] = true;
     localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
 
     logEkle(`🔐 ${k} giriş yaptı`,true);
@@ -166,7 +159,6 @@ function giris(){
   }
 }
 
-/* ===== LOGOUT ===== */
 function cikis(){
   delete onlineUsers[aktifKullanici];
   localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
@@ -174,7 +166,6 @@ function cikis(){
   location.reload();
 }
 
-/* ===== LOG EKLEME ===== */
 function logEkle(metin,kaydet){
   const satir = `${time()} • ${metin}`;
   if(kaydet){
@@ -184,20 +175,28 @@ function logEkle(metin,kaydet){
   adminGuncelle();
 }
 
-/* ===== ADMIN PANEL UPDATE ===== */
+/* ===== GERÇEK ZAMANLI ADMIN PANEL UPDATE ===== */
 function adminGuncelle(){
-  // ✅ Online kullanıcılar sadece aktif olanlar + son giriş
-  onlineList.innerHTML = Object.keys(onlineUsers).map(u=>{
-    return `🟢 ${u} (Son Giriş: ${users[u].lastLogin})`;
-  }).join("<br>");
-
+  onlineList.innerHTML = Object.keys(onlineUsers)
+    .filter(u=>onlineUsers[u])
+    .map(u=>`🟢 ${u} (Son Giriş: ${users[u].lastLogin})`)
+    .join("<br>");
+    
   loglar.innerHTML = logKayit.map(l=>`<p>${l}</p>`).join("");
-
-  // ✅ Kim kimi kaç kez aradı
+  
   istatistik.innerHTML = Object.keys(aramaSayac).map(u=>{
     return Object.keys(aramaSayac[u]).map(a=>`<p>${u} → ${a}: ${aramaSayac[u][a]} kez</p>`).join("");
   }).join("");
 }
+
+/* ===== STORAGE EVENT İLE GERÇEK ZAMANLI ONLINE KULLANICILAR ===== */
+window.addEventListener("storage", (e)=>{
+  if(e.key==="onlineUsers" || e.key==="users"){
+    onlineUsers = JSON.parse(localStorage.getItem("onlineUsers")) || {};
+    users = JSON.parse(localStorage.getItem("users")) || users;
+    adminGuncelle();
+  }
+});
 
 /* ===== ARAMA ===== */
 searchBtn.onclick = ()=>{
@@ -245,13 +244,11 @@ function degistirSifre(){
   logEkle(`🔑 Admin ${secilen} şifresini değiştirdi`,true);
 }
 
-/* ===== ADMIN SECTION TOGGLE ===== */
 function toggleSection(id){
   const el = document.getElementById(id);
   el.classList.toggle("hidden");
 }
 
-/* ===== KİŞİLER ===== */
 const kisiler = {
   küpra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
   yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
@@ -281,4 +278,4 @@ const kisiler = {
 </script>
 
 </body>
-    </html>
+      </html>
