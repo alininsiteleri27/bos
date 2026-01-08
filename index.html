@@ -53,8 +53,8 @@
 <section id="adminPanel" class="announcements hidden">
   <h3>👑 Admin Paneli</h3>
 
-  <h4>🟢 Online Kullanıcılar</h4>
-  <div id="onlineList"></div>
+  <button id="toggleOnline">🟢 Online Kullanıcıları Göster/Gizle</button>
+  <div id="onlineList" style="display:none;"></div>
 
   <button id="toggleLog">📜 Giriş & Arama Kayıtlarını Göster/Gizle</button>
   <div id="loglar" style="display:none;"></div>
@@ -65,7 +65,7 @@
   <h4>🔑 Kullanıcı Şifre Değiştir</h4>
   <select id="userSelect"></select>
   <input type="text" id="newPassword" placeholder="Yeni Şifre">
-  <button onclick="sifreDegistir()">Şifreyi Güncelle</button>
+  <button id="updatePassBtn">Şifreyi Güncelle</button>
 </section>
 
 </main>
@@ -86,6 +86,7 @@ const loglar = document.getElementById("loglar");
 const istatistik = document.getElementById("istatistik");
 const userSelect = document.getElementById("userSelect");
 const newPassword = document.getElementById("newPassword");
+const updatePassBtn = document.getElementById("updatePassBtn");
 
 const arama = document.getElementById("arama");
 const searchBtn = document.getElementById("searchBtn");
@@ -131,9 +132,7 @@ let aramaSayac = JSON.parse(localStorage.getItem("aramaSayac")) || [];
 let logKayit = JSON.parse(localStorage.getItem("logKayit")) || [];
 
 /* ===== ZAMAN ===== */
-function time(){
-  return new Date().toLocaleString("tr-TR");
-}
+function time(){ return new Date().toLocaleString("tr-TR"); }
 
 /* ===== LOGIN ===== */
 function giris(){
@@ -184,27 +183,27 @@ function logEkle(metin,kaydet){
 function adminGuncelle(){
   onlineList.innerHTML = onlineUsers.map(u=>`🟢 ${u}`).join("<br>");
   loglar.innerHTML = logKayit.map(l=>`<p>${l}</p>`).join("");
-  istatistik.innerHTML = aramaSayac.map(a=>`<p>${a}</p>`).join("");
+  istatistik.innerHTML = aramaSayac.map(a=>`<p>${a.kisi} → ${a.sayac} kez</p>`).join("");
 }
 
 /* ===== ŞİFRE DEĞİŞTİR ===== */
-function sifreDegistir(){
+updatePassBtn.onclick = ()=>{
   const secilen = userSelect.value;
   const yenisifre = newPassword.value.trim();
   if(secilen && yenisifre){
     users[secilen].sifre = yenisifre;
     newPassword.value = "";
     alert(`${secilen} kullanıcısının şifresi güncellendi!`);
+    logEkle(`🔑 Admin ${secilen} kullanıcısının şifresini değiştirdi`,true);
   }
-}
+};
 
-/* ===== LOG BUTONU ===== */
+/* ===== LOG VE ONLINE TOGGLE ===== */
 document.getElementById("toggleLog").onclick = ()=>{
-  if(loglar.style.display==="none"){
-    loglar.style.display="block";
-  } else {
-    loglar.style.display="none";
-  }
+  loglar.style.display = (loglar.style.display==="none")?"block":"none";
+};
+document.getElementById("toggleOnline").onclick = ()=>{
+  onlineList.style.display = (onlineList.style.display==="none")?"block":"none";
 };
 
 /* ===== KİŞİLER ===== */
@@ -248,7 +247,6 @@ searchBtn.onclick = ()=>{
 
   if(kisiler[key]){
     const k = kisiler[key];
-
     ad.textContent = k.ad;
     sonuc.textContent = k.mesaj;
     successSound.play();
@@ -278,14 +276,6 @@ searchBtn.onclick = ()=>{
 /* ===== DARK MODE ===== */
 function darkMode(){
   document.body.classList.toggle("dark");
-}
-
-/* ===== CIKIS ===== */
-function cikis(){
-  onlineUsers = onlineUsers.filter(u=>u!==aktifKullanici);
-  localStorage.setItem("onlineUsers",JSON.stringify(onlineUsers));
-  logEkle(`🚪 ${aktifKullanici} çıkış yaptı`,true);
-  location.reload();
 }
 </script>
 </body>
