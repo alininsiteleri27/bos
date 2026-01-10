@@ -225,6 +225,41 @@ const kisiler={
   yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
 };
   <script>
+    <script>
+function ara(){
+  const q = arama.value.toLowerCase().trim();
+
+  if(!q) return;
+
+  const kisi = kisiler[q];
+
+  if(kisi){
+    ad.textContent = kisi.ad;
+    sonuc.textContent = kisi.mesaj;
+
+    sonucFoto.src = kisi.foto;
+    sonucFoto.style.display = "block";
+    setTimeout(()=>sonucFoto.classList.add("show"),10);
+
+    successSound.play();
+  }else{
+    ad.textContent = "";
+    sonuc.textContent = "Bulunamadı ❌";
+    sonucFoto.classList.remove("show");
+    setTimeout(()=>sonucFoto.style.display="none",300);
+    errorSound.play();
+  }
+}
+
+/* BUTON */
+searchBtn.addEventListener("click", ara);
+
+/* ENTER */
+arama.addEventListener("keydown", e=>{
+  if(e.key === "Enter") ara();
+});
+</script>
+
 searchBtn.onclick = () => {
   const key = arama.value.toLowerCase().trim();
   if(!kisiler[key]) return;
