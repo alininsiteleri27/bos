@@ -91,7 +91,6 @@ loglar=document.getElementById("loglar"),
 onlineList=document.getElementById("onlineList"),
 istatistik=document.getElementById("istatistik"),
 aramaDetayDiv=document.getElementById("aramaDetayDiv"),
-searchBtn=document.getElementById("searchBtn"),
 arama=document.getElementById("arama"),
 ad=document.getElementById("ad"),
 sonuc=document.getElementById("sonuc"),
@@ -133,65 +132,65 @@ let users=JSON.parse(localStorage.getItem("users"))||{
 localStorage.setItem("users",JSON.stringify(users));
 
 let aktifKullanici="";
-let aramaSayac=JSON.parse(localStorage.getItem("aramaSayac"))||{};
-let aramaDetay=JSON.parse(localStorage.getItem("aramaDetay"))||{};
-let logKayit=JSON.parse(localStorage.getItem("logKayit"))||[];
+let statusListening=false;
 
-function time(){return new Date().toLocaleString("tr-TR");}
-function logEkle(m){
-  logKayit.unshift(time()+" • "+m);
-  localStorage.setItem("logKayit",JSON.stringify(logKayit));
-  adminGuncelle();
-}
-
-/* ===== FIREBASE ONLINE ===== */
+/* ===== FIREBASE ONLINE (YENİ) ===== */
 function firebaseOnline(username){
-  const userRef = ref(window.db,"status/"+username);
-  const connectedRef = ref(window.db,".info/connected");
+  const userRef=ref(window.db,"status/"+username);
+  const connectedRef=ref(window.db,".info/connected");
 
   onValue(connectedRef,(snap)=>{
-    if(snap.val()===true){
+    if(snap.val()){
       onDisconnect(userRef).set({
-        name:username,state:"offline",last_seen:Date.now()
+        name:username,
+        state:"offline",
+        last_seen:Date.now()
       });
       set(userRef,{
-        name:username,state:"online",last_seen:Date.now()
+        name:username,
+        state:"online",
+        last_seen:Date.now()
       });
     }
   });
 }
 
-function adminGuncelle(){
-  const statusRef = ref(window.db,"status");
+function startStatusListener(){
+  if(statusListening) return;
+  statusListening=true;
+
+  const statusRef=ref(window.db,"status");
   onValue(statusRef,(snap)=>{
     const data=snap.val()||{};
     onlineList.innerHTML=Object.values(data)
       .filter(u=>u.state==="online")
-      .map(u=>"🟢 "+u.name).join("<br>");
+      .map(u=>"🟢 "+u.name)
+      .join("<br>");
   });
-
-  loglar.innerHTML=logKayit.map(l=>"<p>"+l+"</p>").join("");
-  aramaDetayDiv.innerHTML=Object.keys(aramaDetay).map(u=>{
-    return `<h4>${u}</h4>`+
-      aramaDetay[u].map(d=>`<p>→ ${d.hedef} | ${d.zaman}</p>`).join("");
-  }).join("");
 }
 
+/* ===== LOGIN AYNI ===== */
 function giris(){
+  if(!window.db){
+    loginHata.textContent="Firebase yükleniyor...";
+    return;
+  }
+
   const k=kullanici.value.toLowerCase().trim();
   if(users[k]&&users[k].sifre===sifre.value){
     aktifKullanici=k;
     loginBox.classList.add("hidden");
     panel.classList.remove("hidden");
     hosgeldin.textContent="Hoşgeldin "+k.toUpperCase();
+
     firebaseOnline(k);
-    logEkle("🔐 "+k+" giriş yaptı");
 
     if(users[k].rol==="admin"){
       adminPanel.classList.remove("hidden");
       sifreUserSelect.innerHTML=Object.keys(users)
-        .filter(u=>u!=="admin").map(u=>`<option>${u}</option>`).join("");
-      adminGuncelle();
+        .filter(u=>u!=="admin")
+        .map(u=>`<option>${u}</option>`).join("");
+      startStatusListener();
     }
   }else{
     loginHata.textContent="Hatalı giriş";
@@ -202,9 +201,13 @@ function giris(){
 function cikis(){
   if(aktifKullanici){
     const userRef=ref(window.db,"status/"+aktifKullanici);
-    set(userRef,{name:aktifKullanici,state:"offline",last_seen:Date.now()});
+    onDisconnect(userRef).cancel();
+    set(userRef,{
+      name:aktifKullanici,
+      state:"offline",
+      last_seen:Date.now()
+    });
   }
-  logEkle("🚪 "+aktifKullanici+" çıkış yaptı");
   aktifKullanici="";
   panel.classList.add("hidden");
   adminPanel.classList.add("hidden");
@@ -260,7 +263,12 @@ const firebaseConfig={
 
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
-window.db=db;window.ref=ref;window.set=set;window.onValue=onValue;window.onDisconnect=onDisconnect;
+
+window.db=db;
+window.ref=ref;
+window.set=set;
+window.onValue=onValue;
+window.onDisconnect=onDisconnect;
 </script>
 
 <script>
