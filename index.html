@@ -4,14 +4,11 @@
 <meta charset="UTF-8">
 <title>11/A Ali'nin Paneli</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#000000">
 <link rel="stylesheet" href="style.css">
-    
-
 
 <style>
-
 #sonucFoto{
   width:160px;height:200px;object-fit:cover;margin:14px auto 0;
   display:none;opacity:0;transform:scale(.9);
@@ -41,14 +38,9 @@
   <h1 id="hosgeldin"></h1>
   <div>
     <button onclick="darkMode()">🌙</button>
-
-    <button onclick="cikis()" class="logout-btn">
-      <span>⏻</span> Çıkış Yap
-    </button>
-
+    <button onclick="cikis()" class="logout-btn">⏻ Çıkış Yap</button>
   </div>
 </header>
-
 
 <div class="search-box">
   <input id="arama" placeholder="isim ara">
@@ -89,32 +81,6 @@
 <audio id="errorSound" src="sounds/error.mp3"></audio>
 
 <script>
-window.addEventListener("load",()=>{
-  localStorage.removeItem("onlineUsers");
-  localStorage.removeItem("aktifKullanici");
-});
-    function firebaseOnline(username) {
-  const userRef = ref(window.db, "status/" + username);
-  const connectedRef = ref(window.db, ".info/connected");
-
-  onValue(connectedRef, (snap) => {
-    if (snap.val() === true) {
-      onDisconnect(userRef).set({
-        name: username,
-        state: "offline",
-        last_seen: Date.now()
-      });
-
-      set(userRef, {
-        name: username,
-        state: "online",
-        last_seen: Date.now()
-      });
-    }
-  });
-}
-
-
 const kullanici=document.getElementById("kullanici"),
 sifre=document.getElementById("sifre"),
 loginBox=document.getElementById("loginBox"),
@@ -167,7 +133,6 @@ let users=JSON.parse(localStorage.getItem("users"))||{
 localStorage.setItem("users",JSON.stringify(users));
 
 let aktifKullanici="";
-let onlineUsers={};
 let aramaSayac=JSON.parse(localStorage.getItem("aramaSayac"))||{};
 let aramaDetay=JSON.parse(localStorage.getItem("aramaDetay"))||{};
 let logKayit=JSON.parse(localStorage.getItem("logKayit"))||[];
@@ -179,100 +144,77 @@ function logEkle(m){
   adminGuncelle();
 }
 
-function adminGuncelle(){
-  const statusRef = ref(window.db, "status");
+/* ===== FIREBASE ONLINE ===== */
+function firebaseOnline(username){
+  const userRef = ref(window.db,"status/"+username);
+  const connectedRef = ref(window.db,".info/connected");
 
-  onValue(statusRef, (snap) => {
-    const data = snap.val() || {};
-    onlineList.innerHTML = Object.values(data)
-      .filter(u => u.state === "online")
-      .map(u => "🟢 " + u.name)
-      .join("<br>");
+  onValue(connectedRef,(snap)=>{
+    if(snap.val()===true){
+      onDisconnect(userRef).set({
+        name:username,state:"offline",last_seen:Date.now()
+      });
+      set(userRef,{
+        name:username,state:"online",last_seen:Date.now()
+      });
+    }
+  });
+}
+
+function adminGuncelle(){
+  const statusRef = ref(window.db,"status");
+  onValue(statusRef,(snap)=>{
+    const data=snap.val()||{};
+    onlineList.innerHTML=Object.values(data)
+      .filter(u=>u.state==="online")
+      .map(u=>"🟢 "+u.name).join("<br>");
   });
 
-  aramaDetayDiv.innerHTML = Object.keys(aramaDetay).map(u=>{
-    return `<h4>${u}</h4>` +
+  loglar.innerHTML=logKayit.map(l=>"<p>"+l+"</p>").join("");
+  aramaDetayDiv.innerHTML=Object.keys(aramaDetay).map(u=>{
+    return `<h4>${u}</h4>`+
       aramaDetay[u].map(d=>`<p>→ ${d.hedef} | ${d.zaman}</p>`).join("");
   }).join("");
 }
 
 function giris(){
-  const k = kullanici.value.toLowerCase().trim();
-
-  if(users[k] && users[k].sifre === sifre.value){
-    aktifKullanici = k;
-    localStorage.setItem("aktifKullanici", k);
-
+  const k=kullanici.value.toLowerCase().trim();
+  if(users[k]&&users[k].sifre===sifre.value){
+    aktifKullanici=k;
     loginBox.classList.add("hidden");
     panel.classList.remove("hidden");
-    hosgeldin.textContent = "Hoşgeldin " + k.toUpperCase();
+    hosgeldin.textContent="Hoşgeldin "+k.toUpperCase();
+    firebaseOnline(k);
+    logEkle("🔐 "+k+" giriş yaptı");
 
-    firebaseOnline(k); // 🔥 KULLANICI ONLINE
-
-    logEkle("🔐 " + k + " giriş yaptı");
-
-    if(users[k].rol === "admin"){
+    if(users[k].rol==="admin"){
       adminPanel.classList.remove("hidden");
-      sifreUserSelect.innerHTML = Object.keys(users)
-        .filter(u => u !== "admin")
-        .map(u => `<option>${u}</option>`)
-        .join("");
+      sifreUserSelect.innerHTML=Object.keys(users)
+        .filter(u=>u!=="admin").map(u=>`<option>${u}</option>`).join("");
       adminGuncelle();
     }
-  } else {
-    loginHata.textContent = "Hatalı giriş";
+  }else{
+    loginHata.textContent="Hatalı giriş";
     errorSound.play();
   }
 }
 
-
 function cikis(){
-  delete onlineUsers[aktifKullanici];
-  logEkle("..çıkış.. "+aktifKullanici+" çıkış yaptı");
-  localStorage.removeItem("aktifKullanici");
-
+  if(aktifKullanici){
+    const userRef=ref(window.db,"status/"+aktifKullanici);
+    set(userRef,{name:aktifKullanici,state:"offline",last_seen:Date.now()});
+  }
+  logEkle("🚪 "+aktifKullanici+" çıkış yaptı");
   aktifKullanici="";
   panel.classList.add("hidden");
   adminPanel.classList.add("hidden");
   loginBox.classList.remove("hidden");
-
-  kullanici.value="";
-  sifre.value="";
-}
-
-searchBtn.onclick=()=>{
-  const key=arama.value.toLowerCase().trim();
-  if(kisiler[key]){
-    const k=kisiler[key];
-    ad.textContent=k.ad;
-    sonuc.textContent=k.mesaj;
-    sonucFoto.src=k.foto;
-    sonucFoto.style.display="block";
-    sonucFoto.classList.add("show");
-
-    if(!aramaSayac[aktifKullanici])aramaSayac[aktifKullanici]={};
-    if(!aramaSayac[aktifKullanici][key])aramaSayac[aktifKullanici][key]=0;
-    aramaSayac[aktifKullanici][key]++;
-    localStorage.setItem("aramaSayac",JSON.stringify(aramaSayac));
-
-    if(!aramaDetay[aktifKullanici])aramaDetay[aktifKullanici]=[];
-    aramaDetay[aktifKullanici].push({hedef:key,zaman:time()});
-    localStorage.setItem("aramaDetay",JSON.stringify(aramaDetay));
-
-    logEkle("🔍 "+aktifKullanici+" → "+key+" aradı");
-  }
-};
-
-function degistirSifre(){
-  if(users[aktifKullanici].rol!=="admin")return;
-  users[sifreUserSelect.value].sifre=yeniSifre.value;
-  localStorage.setItem("users",JSON.stringify(users));
-  sifreHata.textContent="Şifre değiştirildi";
 }
 
 function toggleSection(id){document.getElementById(id).classList.toggle("hidden");}
 function darkMode(){document.body.classList.toggle("dark");}
 
+/* ===== KISILER (DOKUNULMADI) ===== */
 const kisiler={
   küpra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
   yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
@@ -299,57 +241,33 @@ const kisiler={
   emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
   yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
 };
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-</script>
-
-      <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  set,
-  onValue,
-  onDisconnect,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD36TC6n4kR6wBoiownR7L2iCQyBrAwq1k",
-  authDomain: "a-79192.firebaseapp.com",
-  databaseURL: "https://a-79192-default-rtdb.firebaseio.com",
-  projectId: "a-79192",
-  storageBucket: "a-79192.firebasestorage.app",
-  messagingSenderId: "29833951990",
-  appId: "1:29833951990:web:36cda4e2ce8fb9ef4b4ad7"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// GLOBAL yapıyoruz ki diğer script görsün
-window.db = db;
-window.ref = ref;
-window.set = set;
-window.onValue = onValue;
-window.onDisconnect = onDisconnect;
-window.serverTimestamp = serverTimestamp;
-</script>
-
 </script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  set,
-  onValue,
-  onDisconnect
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, onValue, onDisconnect }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+const firebaseConfig={
+  apiKey:"AIzaSyD36TC6n4kR6wBoiownR7L2iCQyBrAwq1k",
+  authDomain:"a-79192.firebaseapp.com",
+  databaseURL:"https://a-79192-default-rtdb.firebaseio.com",
+  projectId:"a-79192",
+  storageBucket:"a-79192.firebasestorage.app",
+  messagingSenderId:"29833951990",
+  appId:"1:29833951990:web:36cda4e2ce8fb9ef4b4ad7"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+window.db=db;window.ref=ref;window.set=set;window.onValue=onValue;window.onDisconnect=onDisconnect;
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
 
 </body>
 </html>
