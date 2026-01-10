@@ -1,4 +1,5 @@
-const CACHE_NAME="11a-panel-v1";
+const CACHE_NAME="11a-panel-v2"; // v1 → v2
+
 const FILES_TO_CACHE=[
   "/",
   "/index.html",
