@@ -5,23 +5,11 @@
 <title>11/A Ali'nin Paneli</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
-
-<style>
-#sonucFoto{
-  width:160px;height:200px;object-fit:cover;margin:14px auto 0;
-  display:none;opacity:0;transform:scale(.9);
-  transition:.3s;border-radius:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,.6)
-}
-#sonucFoto.show{opacity:1;transform:scale(1)}
-@media(max-width:600px){#sonucFoto{width:120px;height:150px}}
-.hidden{display:none;}
-.admin-toggle{cursor:pointer;color:var(--accent);font-weight:700;margin-bottom:6px;display:inline-block;}
-</style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="loginBox" class="login-box">
   <h2>11/A Panel Girişi</h2>
   <input id="kullanici" placeholder="Kullanıcı adı">
@@ -30,87 +18,60 @@
   <p id="loginHata"></p>
 </div>
 
+<!-- PANEL -->
 <main id="panel" class="app hidden">
 
 <header class="topbar">
-  <h1 id="hosgeldin"></h1>
-  <div>
-    <button onclick="darkMode()">🌙</button>
-    <button onclick="cikis()" class="logout-btn">
-      <span>⏻</span> Çıkış Yap
-    </button>
+  <h3 id="hosgeldin"></h3>
+  <div class="top-actions">
+    <button class="icon-btn" onclick="darkMode()">🌙</button>
+    <button class="logout-btn" onclick="cikis()">⏻ Çıkış</button>
   </div>
 </header>
 
 <div class="search-box">
-  <input id="arama" placeholder="isim ara">
+  <input id="arama" placeholder="İsim ara">
   <button id="searchBtn">Ara</button>
 </div>
 
 <p id="ad"></p>
 <p id="sonuc"></p>
-<img id="sonucFoto">
 
+<!-- FOTO KİLİT -->
+<div id="fotoKilit" class="hidden" style="margin-top:12px;">
+  🔒 Foto kilitli<br>
+  <button onclick="fotoPopup()">Fotoğrafı Aç</button>
+</div>
+
+<img id="sonucFoto" style="display:none;width:160px;border-radius:14px;margin-top:12px;">
+
+<!-- ADMIN -->
 <section id="adminPanel" class="announcements hidden">
   <h3>👑 Admin Paneli</h3>
 
-  <div class="admin-toggle" onclick="toggleSection('onlineSection')">🟢 Online Kullanıcılar</div>
-  <div id="onlineSection" class="hidden"><div id="onlineList"></div></div>
-
-  <div class="admin-toggle" onclick="toggleSection('logSection')">📜 Loglar</div>
-  <div id="logSection" class="hidden"><div id="loglar"></div></div>
-
-  <div class="admin-toggle" onclick="toggleSection('istatistikSection')">📊 Arama İstatistikleri</div>
-  <div id="istatistikSection" class="hidden"><div id="istatistik"></div></div>
-
-  <div class="admin-toggle" onclick="toggleSection('detaySection')">🧠 Detaylı Arama Geçmişi</div>
-  <div id="detaySection" class="hidden"><div id="aramaDetayDiv"></div></div>
-
-  <div class="admin-toggle" onclick="toggleSection('sifreSection')">🔑 Şifre Değiştir</div>
-  <div id="sifreSection" class="hidden">
-    <select id="sifreUserSelect"></select>
-    <input id="yeniSifre" placeholder="Yeni Şifre">
-    <button onclick="degistirSifre()">Değiştir</button>
-    <p id="sifreHata"></p>
-  </div>
+  <input id="yeniFotoSifre" placeholder="Yeni Foto Şifresi">
+  <button onclick="fotoSifreDegistir()">Foto Şifresini Değiştir</button>
+  <p id="adminBilgi"></p>
 </section>
 
 </main>
 
-<audio id="successSound" src="sounds/success.mp3"></audio>
-<audio id="errorSound" src="sounds/error.mp3"></audio>
+<!-- FOTO POPUP -->
+<div id="fotoModal" class="hidden" style="
+position:fixed;inset:0;
+background:rgba(0,0,0,.7);
+display:flex;align-items:center;justify-content:center;">
+  <div class="login-box">
+    <h3>🔒 Foto Şifresi</h3>
+    <input id="fotoSifreInput" placeholder="Şifre">
+    <button onclick="fotoSifreKontrol()">Aç</button>
+    <p id="fotoHata"></p>
+  </div>
+</div>
 
 <script>
-window.addEventListener("load",()=>{
-  localStorage.removeItem("onlineUsers");
-  localStorage.removeItem("aktifKullanici");
-});
-
-/* === DOM === */
-const kullanici=document.getElementById("kullanici"),
-sifre=document.getElementById("sifre"),
-loginBox=document.getElementById("loginBox"),
-panel=document.getElementById("panel"),
-hosgeldin=document.getElementById("hosgeldin"),
-adminPanel=document.getElementById("adminPanel"),
-loglar=document.getElementById("loglar"),
-onlineList=document.getElementById("onlineList"),
-istatistik=document.getElementById("istatistik"),
-aramaDetayDiv=document.getElementById("aramaDetayDiv"),
-searchBtn=document.getElementById("searchBtn"),
-arama=document.getElementById("arama"),
-ad=document.getElementById("ad"),
-sonuc=document.getElementById("sonuc"),
-sonucFoto=document.getElementById("sonucFoto"),
-sifreUserSelect=document.getElementById("sifreUserSelect"),
-yeniSifre=document.getElementById("yeniSifre"),
-sifreHata=document.getElementById("sifreHata"),
-loginHata=document.getElementById("loginHata"),
-successSound=document.getElementById("successSound"),
-errorSound=document.getElementById("errorSound");
-
-/* === USERS === */
-let users=JSON.parse(localStorage.getItem("users"))||{
+/* === USERS (DOKUNULMADI) === */
+const users={
   admin:{sifre:"admin123",rol:"admin"},
   küpra:{sifre:"k123",rol:"user"},
   yusuf:{sifre:"y123",rol:"user"},
@@ -137,67 +98,8 @@ let users=JSON.parse(localStorage.getItem("users"))||{
   emre:{sifre:"er123",rol:"user"},
   yiğit:{sifre:"yı123",rol:"user"}
 };
-localStorage.setItem("users",JSON.stringify(users));
 
-let aktifKullanici="";
-let onlineUsers={};
-
-/* === LOGIN === */
-function giris(){
-  const k=kullanici.value.toLowerCase().trim();
-  if(users[k]&&users[k].sifre===sifre.value){
-    aktifKullanici=k;
-    loginBox.classList.add("hidden");
-    panel.classList.remove("hidden");
-    hosgeldin.textContent="Hoşgeldin "+k.toUpperCase();
-    firebaseOnline(k);
-
-    if(users[k].rol==="admin"){
-      adminPanel.classList.remove("hidden");
-      sifreUserSelect.innerHTML=Object.keys(users)
-        .filter(u=>u!=="admin")
-        .map(u=>`<option>${u}</option>`).join("");
-      startStatusListener();
-    }
-  }else{
-    loginHata.textContent="Hatalı giriş";
-    errorSound.play();
-  }
-}
-
-function cikis(){
-  if(aktifKullanici && window.db){
-    firebaseSet(firebaseRef("status/"+aktifKullanici),{
-      name:aktifKullanici,
-      state:"offline",
-      last:Date.now()
-    });
-  }
-  location.reload();
-}
-
-function toggleSection(id){
-  document.getElementById(id).classList.toggle("hidden");
-}
-function darkMode(){
-  document.body.classList.toggle("dark");
-}
-  <script>
-searchBtn.onclick = () => {
-  const key = arama.value.toLowerCase().trim();
-  if(!kisiler[key]) return;
-
-  const k = kisiler[key];
-  ad.textContent = k.ad;
-  sonuc.textContent = k.mesaj;
-  sonucFoto.src = k.foto;
-  sonucFoto.style.display = "block";
-  setTimeout(()=>sonucFoto.classList.add("show"),10);
-};
-</script>
-
-
-/* === KISILER (AYNEN) === */
+/* === KİŞİLER (AYNEN) === */
 const kisiler={
   küpra:{ad:"Küpra",mesaj:"h",foto:"fotos/küpra.jpg"},
   yusuf:{ad:"Yusuf",mesaj:"ı",foto:"fotos/yusuf.jpg"},
@@ -224,140 +126,67 @@ const kisiler={
   emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
   yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
 };
-  <script>
-    <script>
-function ara(){
-  const q = arama.value.toLowerCase().trim();
 
-  if(!q) return;
+/* === FOTO ŞİFRE === */
+let fotoSifre=localStorage.getItem("fotoSifre")||"11a";
+let fotoYetki=false;
+let seciliFoto="";
 
-  const kisi = kisiler[q];
-
-  if(kisi){
-    ad.textContent = kisi.ad;
-    sonuc.textContent = kisi.mesaj;
-
-    sonucFoto.src = kisi.foto;
-    sonucFoto.style.display = "block";
-    setTimeout(()=>sonucFoto.classList.add("show"),10);
-
-    successSound.play();
-  }else{
-    ad.textContent = "";
-    sonuc.textContent = "Bulunamadı ❌";
-    sonucFoto.classList.remove("show");
-    setTimeout(()=>sonucFoto.style.display="none",300);
-    errorSound.play();
-  }
+/* === LOGIN === */
+function giris(){
+  const k=kullanici.value.toLowerCase().trim();
+  if(users[k]&&users[k].sifre===sifre.value){
+    aktifKullanici=k;
+    loginBox.classList.add("hidden");
+    panel.classList.remove("hidden");
+    hosgeldin.textContent="Hoşgeldin "+k.toUpperCase();
+    if(users[k].rol==="admin") adminPanel.classList.remove("hidden");
+  }else loginHata.textContent="Hatalı giriş";
 }
 
-/* BUTON */
-searchBtn.addEventListener("click", ara);
+function cikis(){location.reload();}
+function darkMode(){document.body.classList.toggle("dark");}
 
-/* ENTER */
-arama.addEventListener("keydown", e=>{
-  if(e.key === "Enter") ara();
-});
-</script>
-
-searchBtn.onclick = () => {
-  const key = arama.value.toLowerCase().trim();
-  if(!kisiler[key]) return;
-
-  const k = kisiler[key];
-  ad.textContent = k.ad;
-  sonuc.textContent = k.mesaj;
-  sonucFoto.src = k.foto;
-  sonucFoto.style.display = "block";
-  sonucFoto.classList.remove("show");
-  setTimeout(()=>sonucFoto.classList.add("show"),10);
-};
-</script>
-  <script>
+/* === ARAMA === */
 function ara(){
-  const q = arama.value.toLowerCase().trim();
-  if(!q) return;
+  const q=arama.value.toLowerCase().trim();
+  const k=kisiler[q];
+  if(!k) return sonuc.textContent="Bulunamadı ❌";
 
-  const kisi = kisiler[q];
-  if(kisi){
-    ad.textContent = kisi.ad;
-    sonuc.textContent = kisi.mesaj;
-
-    sonucFoto.src = kisi.foto;
-    sonucFoto.style.display = "block";
-    setTimeout(()=>sonucFoto.classList.add("show"),10);
-
-    successSound.play();
-  }else{
-    ad.textContent = "";
-    sonuc.textContent = "Bulunamadı ❌";
-    sonucFoto.classList.remove("show");
-    setTimeout(()=>sonucFoto.style.display="none",300);
-    errorSound.play();
-  }
+  ad.textContent=k.ad;
+  sonuc.textContent=k.mesaj;
+  seciliFoto=k.foto;
+  fotoYetki=false;
+  document.getElementById("fotoKilit").classList.remove("hidden");
+  sonucFoto.style.display="none";
 }
 
-/* buton tık */
-searchBtn.addEventListener("click", ara);
+/* === FOTO POPUP === */
+function fotoPopup(){
+  document.getElementById("fotoModal").classList.remove("hidden");
+}
 
-/* enter ile arama */
-arama.addEventListener("keydown", e=>{
-  if(e.key==="Enter") ara();
-});
-</script>
+function fotoSifreKontrol(){
+  if(fotoSifreInput.value===fotoSifre){
+    fotoYetki=true;
+    fotoModal.classList.add("hidden");
+    sonucFoto.src=seciliFoto;
+    sonucFoto.style.display="block";
+  }else fotoHata.textContent="Şifre yanlış";
+}
 
+/* === ADMIN FOTO ŞİFRE === */
+function fotoSifreDegistir(){
+  const y=yeniFotoSifre.value.trim();
+  if(!y) return;
+  fotoSifre=y;
+  localStorage.setItem("fotoSifre",y);
+  adminBilgi.textContent="Foto şifresi değiştirildi ✔";
+}
 
-</script>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, onValue, onDisconnect }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-const firebaseConfig={
- apiKey:"AIzaSyD36TC6n4kR6wBoiownR7L2iCQyBrAwq1k",
- authDomain:"a-79192.firebaseapp.com",
- databaseURL:"https://a-79192-default-rtdb.firebaseio.com",
- projectId:"a-79192",
- storageBucket:"a-79192.firebasestorage.app",
- messagingSenderId:"29833951990",
- appId:"1:29833951990:web:36cda4e2ce8fb9ef4b4ad7"
-};
-
-const app=initializeApp(firebaseConfig);
-const db=getDatabase(app);
-window.db=db;
-
-window.firebaseRef=(p)=>ref(db,p);
-window.firebaseSet=set;
-
-/* === ONLINE FIX === */
-window.firebaseOnline=(u)=>{
- const statusRef=ref(db,"status/"+u);
- const connRef=ref(db,".info/connected");
-
- onValue(connRef,s=>{
-  if(s.val()){
-    onDisconnect(statusRef).set({
-      name:u,state:"offline",last:Date.now()
-    });
-    set(statusRef,{
-      name:u,state:"online",last:Date.now()
-    });
-  }
- });
-};
-
-window.startStatusListener=()=>{
- const r=ref(db,"status");
- onValue(r,s=>{
-  const v=s.val()||{};
-  onlineList.innerHTML=Object.values(v)
-    .filter(x=>x.state==="online")
-    .map(x=>"🟢 "+x.name)
-    .join("<br>");
- });
-};
+/* EVENTS */
+searchBtn.onclick=ara;
+arama.addEventListener("keydown",e=>{if(e.key==="Enter")ara();});
 </script>
 
 </body>
