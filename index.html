@@ -224,6 +224,21 @@ const kisiler={
   emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
   yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
 };
+  <script>
+searchBtn.onclick = () => {
+  const key = arama.value.toLowerCase().trim();
+  if(!kisiler[key]) return;
+
+  const k = kisiler[key];
+  ad.textContent = k.ad;
+  sonuc.textContent = k.mesaj;
+  sonucFoto.src = k.foto;
+  sonucFoto.style.display = "block";
+  sonucFoto.classList.remove("show");
+  setTimeout(()=>sonucFoto.classList.add("show"),10);
+};
+</script>
+
 </script>
 
 <script type="module">
