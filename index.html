@@ -11,7 +11,6 @@ body{font-family:Arial;background:#111;color:#fff;margin:0}
 .login-box,main{padding:20px}
 input,button,select{padding:10px;margin:5px 0;width:100%}
 button{cursor:pointer}
-
 #sonucFoto{
  width:160px;height:200px;object-fit:cover;
  display:none;opacity:0;transform:scale(.9);
@@ -140,14 +139,15 @@ function giris(){
     .filter(u=>u!=="admin")
     .map(u=>`<option>${u}</option>`).join("");
    startStatusListener();
+   guncelleAdmin();
   }
  }else loginHata.textContent="Hatalı giriş";
 }
 
 function cikis(){
- if(aktif){
-  const r=ref(db,"status/"+aktif);
-  set(r,{name:aktif,state:"offline",last:Date.now()});
+ if(window.db && aktif){
+  const r=firebaseRef("status/"+aktif);
+  firebaseSet(r,{name:aktif,state:"offline",last:Date.now()});
  }
  location.reload();
 }
@@ -206,15 +206,27 @@ const firebaseConfig={
 
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
+
 window.db=db;
+window.firebaseRef=(p)=>ref(db,p);
+window.firebaseSet=set;
 
 window.firebaseOnline=(u)=>{
- const r=ref(db,"status/"+u);
- const c=ref(db,".info/connected");
- onValue(c,s=>{
-  if(s.val()){
-   onDisconnect(r).set({name:u,state:"offline",last:Date.now()});
-   set(r,{name:u,state:"online",last:Date.now()});
+ const statusRef=ref(db,"status/"+u);
+ const connectedRef=ref(db,".info/connected");
+
+ onValue(connectedRef,snap=>{
+  if(snap.val()===true){
+   onDisconnect(statusRef).set({
+    name:u,
+    state:"offline",
+    last:Date.now()
+   });
+   set(statusRef,{
+    name:u,
+    state:"online",
+    last:Date.now()
+   });
   }
  });
 };
@@ -222,7 +234,8 @@ window.firebaseOnline=(u)=>{
 window.startStatusListener=()=>{
  const r=ref(db,"status");
  onValue(r,s=>{
-  onlineDiv.innerHTML=Object.values(s.val()||{})
+  const v=s.val()||{};
+  onlineDiv.innerHTML=Object.values(v)
    .filter(x=>x.state==="online")
    .map(x=>"🟢 "+x.name)
    .join("<br>");
