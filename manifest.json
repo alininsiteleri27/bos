@@ -1,7 +1,7 @@
 {
   "name": "11/A Ali'nin Paneli",
   "short_name": "11A Panel",
-  "start_url": "/bos/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
