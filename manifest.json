@@ -1,7 +1,7 @@
 {
-  "name": "11/A Ali'nin Paneli",
+  "name": "11/A Panel",
   "short_name": "11A Panel",
-  "start_url": ".",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
