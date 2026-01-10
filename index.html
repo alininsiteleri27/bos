@@ -189,11 +189,10 @@ function adminGuncelle(){
       .map(u => "🟢 " + u.name)
       .join("<br>");
   });
-}
 
-
-  aramaDetayDiv.innerHTML=Object.keys(aramaDetay).map(u=>{
-    return `<h4>${u}</h4>`+aramaDetay[u].map(d=>`<p>→ ${d.hedef} | ${d.zaman}</p>`).join("");
+  aramaDetayDiv.innerHTML = Object.keys(aramaDetay).map(u=>{
+    return `<h4>${u}</h4>` +
+      aramaDetay[u].map(d=>`<p>→ ${d.hedef} | ${d.zaman}</p>`).join("");
   }).join("");
 }
 
