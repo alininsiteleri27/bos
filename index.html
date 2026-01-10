@@ -93,6 +93,27 @@ window.addEventListener("load",()=>{
   localStorage.removeItem("onlineUsers");
   localStorage.removeItem("aktifKullanici");
 });
+    function firebaseOnline(username) {
+  const userRef = ref(window.db, "status/" + username);
+  const connectedRef = ref(window.db, ".info/connected");
+
+  onValue(connectedRef, (snap) => {
+    if (snap.val() === true) {
+      onDisconnect(userRef).set({
+        name: username,
+        state: "offline",
+        last_seen: Date.now()
+      });
+
+      set(userRef, {
+        name: username,
+        state: "online",
+        last_seen: Date.now()
+      });
+    }
+  });
+}
+
 
 const kullanici=document.getElementById("kullanici"),
 sifre=document.getElementById("sifre"),
