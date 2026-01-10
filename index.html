@@ -2,248 +2,191 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>11/A Ali'nin Paneli</title>
+<title>11/A Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
-<link rel="stylesheet" href="style.css">
 
 <style>
+body{font-family:Arial;background:#111;color:#fff;margin:0}
+.hidden{display:none}
+.login-box,main{padding:20px}
+input,button,select{padding:10px;margin:5px 0;width:100%}
+button{cursor:pointer}
+
 #sonucFoto{
-  width:160px;height:200px;object-fit:cover;margin:14px auto 0;
-  display:none;opacity:0;transform:scale(.9);
-  transition:.3s;border-radius:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,.6)
+ width:160px;height:200px;object-fit:cover;
+ display:none;opacity:0;transform:scale(.9);
+ transition:.3s;border-radius:14px;margin:auto
 }
 #sonucFoto.show{opacity:1;transform:scale(1)}
-@media(max-width:600px){#sonucFoto{width:120px;height:150px}}
-.hidden{display:none;}
-.admin-toggle{cursor:pointer;color:var(--accent);font-weight:700;margin-bottom:6px;display:inline-block;}
+.admin-toggle{cursor:pointer;font-weight:bold;margin-top:10px}
 </style>
 </head>
 
 <body>
 
 <div id="loginBox" class="login-box">
-  <h2>11/A Panel Girişi</h2>
-  <input id="kullanici" placeholder="Kullanıcı adı">
-  <input id="sifre" type="password" placeholder="Şifre">
-  <button onclick="giris()">Giriş Yap</button>
-  <p id="loginHata"></p>
+<h2>11/A Giriş</h2>
+<input id="kullanici" placeholder="Kullanıcı adı">
+<input id="sifre" type="password" placeholder="Şifre">
+<button onclick="giris()">Giriş</button>
+<p id="loginHata"></p>
 </div>
 
-<main id="panel" class="app hidden">
+<main id="panel" class="hidden">
+<h2 id="hosgeldin"></h2>
 
-<header class="topbar">
-  <h1 id="hosgeldin"></h1>
-  <div>
-    <button onclick="darkMode()">🌙</button>
-    <button onclick="cikis()" class="logout-btn">⏻ Çıkış Yap</button>
-  </div>
-</header>
-
-<div class="search-box">
-  <input id="arama" placeholder="isim ara">
-  <button id="searchBtn">Ara</button>
-</div>
+<input id="arama" placeholder="İsim ara">
+<button id="searchBtn">Ara</button>
 
 <p id="ad"></p>
 <p id="sonuc"></p>
 <img id="sonucFoto">
 
-<section id="adminPanel" class="announcements hidden">
-  <h3>👑 Admin Paneli</h3>
+<section id="adminPanel" class="hidden">
+<h3>👑 Admin Paneli</h3>
 
-  <div class="admin-toggle" onclick="toggleSection('onlineSection')">🟢 Online Kullanıcılar</div>
-  <div id="onlineSection" class="hidden"><div id="onlineList"></div></div>
+<div class="admin-toggle" onclick="toggle('onlineDiv')">🟢 Online Kullanıcılar</div>
+<div id="onlineDiv" class="hidden"></div>
 
-  <div class="admin-toggle" onclick="toggleSection('logSection')">📜 Loglar</div>
-  <div id="logSection" class="hidden"><div id="loglar"></div></div>
+<div class="admin-toggle" onclick="toggle('loglar')">📜 Arama Logları</div>
+<div id="loglar" class="hidden"></div>
 
-  <div class="admin-toggle" onclick="toggleSection('istatistikSection')">📊 Arama İstatistikleri</div>
-  <div id="istatistikSection" class="hidden"><div id="istatistik"></div></div>
+<div class="admin-toggle" onclick="toggle('istatistik')">📊 İstatistik</div>
+<div id="istatistik" class="hidden"></div>
 
-  <div class="admin-toggle" onclick="toggleSection('detaySection')">🧠 Detaylı Arama Geçmişi</div>
-  <div id="detaySection" class="hidden"><div id="aramaDetayDiv"></div></div>
-
-  <div class="admin-toggle" onclick="toggleSection('sifreSection')">🔑 Şifre Değiştir</div>
-  <div id="sifreSection" class="hidden">
-    <select id="sifreUserSelect"></select>
-    <input id="yeniSifre" placeholder="Yeni Şifre">
-    <button onclick="degistirSifre()">Değiştir</button>
-    <p id="sifreHata"></p>
-  </div>
+<div class="admin-toggle" onclick="toggle('sifreDiv')">🔑 Şifre Değiştir</div>
+<div id="sifreDiv" class="hidden">
+<select id="sifreUserSelect"></select>
+<input id="yeniSifre" placeholder="Yeni şifre">
+<button onclick="degistirSifre()">Değiştir</button>
+<p id="sifreHata"></p>
+</div>
 </section>
 
+<button onclick="cikis()">Çıkış</button>
 </main>
 
-<audio id="successSound" src="sounds/success.mp3"></audio>
-<audio id="errorSound" src="sounds/error.mp3"></audio>
-
 <script>
-const kullanici=document.getElementById("kullanici"),
-sifre=document.getElementById("sifre"),
-loginBox=document.getElementById("loginBox"),
-panel=document.getElementById("panel"),
-hosgeldin=document.getElementById("hosgeldin"),
-adminPanel=document.getElementById("adminPanel"),
-loglar=document.getElementById("loglar"),
-onlineList=document.getElementById("onlineList"),
-istatistik=document.getElementById("istatistik"),
-aramaDetayDiv=document.getElementById("aramaDetayDiv"),
-arama=document.getElementById("arama"),
-ad=document.getElementById("ad"),
-sonuc=document.getElementById("sonuc"),
-sonucFoto=document.getElementById("sonucFoto"),
-sifreUserSelect=document.getElementById("sifreUserSelect"),
-yeniSifre=document.getElementById("yeniSifre"),
-sifreHata=document.getElementById("sifreHata"),
-loginHata=document.getElementById("loginHata"),
-successSound=document.getElementById("successSound"),
-errorSound=document.getElementById("errorSound");
-
-let users=JSON.parse(localStorage.getItem("users"))||{
-  admin:{sifre:"admin123",rol:"admin"},
-  küpra:{sifre:"k123",rol:"user"},
-  yusuf:{sifre:"y123",rol:"user"},
-  beyza:{sifre:"b123",rol:"user"},
-  enes:{sifre:"e123",rol:"user"},
-  hira:{sifre:"h123",rol:"user"},
-  hacer:{sifre:"ha123",rol:"user"},
-  deniz:{sifre:"d123",rol:"user"},
-  efe:{sifre:"ef123",rol:"user"},
-  ayhan:{sifre:"a123",rol:"user"},
-  dilber:{sifre:"di123",rol:"user"},
-  samet:{sifre:"s123",rol:"user"},
-  ipek:{sifre:"i123",rol:"user"},
-  esma:{sifre:"es123",rol:"user"},
-  sude:{sifre:"su123",rol:"user"},
-  cehennet:{sifre:"c123",rol:"user"},
-  berke:{sifre:"be123",rol:"user"},
-  emin:{sifre:"em123",rol:"user"},
-  hashüs:{sifre:"haş123",rol:"user"},
-  bünyamin:{sifre:"bü123",rol:"user"},
-  efsa:{sifre:"efsa123",rol:"user"},
-  merve:{sifre:"m123",rol:"user"},
-  cilo:{sifre:"ci123",rol:"user"},
-  emre:{sifre:"er123",rol:"user"},
-  yiğit:{sifre:"yı123",rol:"user"}
+const users=JSON.parse(localStorage.getItem("users"))||{
+ admin:{sifre:"admin123",rol:"admin"},
+ küpra:{sifre:"k123",rol:"user"},
+ yusuf:{sifre:"y123",rol:"user"},
+ beyza:{sifre:"b123",rol:"user"},
+ enes:{sifre:"e123",rol:"user"},
+ hira:{sifre:"h123",rol:"user"},
+ hacer:{sifre:"ha123",rol:"user"},
+ deniz:{sifre:"d123",rol:"user"},
+ efe:{sifre:"ef123",rol:"user"},
+ ayhan:{sifre:"a123",rol:"user"},
+ dilber:{sifre:"di123",rol:"user"},
+ samet:{sifre:"s123",rol:"user"},
+ ipek:{sifre:"i123",rol:"user"},
+ esma:{sifre:"es123",rol:"user"},
+ sude:{sifre:"su123",rol:"user"},
+ cehennet:{sifre:"c123",rol:"user"},
+ berke:{sifre:"be123",rol:"user"},
+ emin:{sifre:"em123",rol:"user"},
+ hashüs:{sifre:"haş123",rol:"user"},
+ bünyamin:{sifre:"bü123",rol:"user"},
+ efsa:{sifre:"efsa123",rol:"user"},
+ merve:{sifre:"m123",rol:"user"},
+ cilo:{sifre:"ci123",rol:"user"},
+ emre:{sifre:"er123",rol:"user"},
+ yiğit:{sifre:"yı123",rol:"user"}
 };
 localStorage.setItem("users",JSON.stringify(users));
 
-let aktifKullanici="";
-let statusListening=false;
+const kisiler={
+ küpra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
+ yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
+ beyza:{ad:"Beyza",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
+ enes:{ad:"Enes",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
+ hira:{ad:"Hira",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
+ hacer:{ad:"Hacer",mesaj:"erkek",foto:"fotos/hacer.jpg"},
+ deniz:{ad:"Deniz",mesaj:"taklitman",foto:"fotos/deniz.jpg"},
+ efe:{ad:"Efe",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
+ ayhan:{ad:"Ayhan",mesaj:"gergin adam",foto:"fotos/ayhan.jpg"},
+ dilber:{ad:"Dilber",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
+ samet:{ad:"Samet",mesaj:"başkan",foto:"fotos/samet.jpg"},
+ ipek:{ad:"İpek",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
+ esma:{ad:"Esma",mesaj:"umrede",foto:"fotos/esma.jpg"},
+ sude:{ad:"Sude",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
+ cehennet:{ad:"Cehennet",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
+ berke:{ad:"Berke",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
+ emin:{ad:"Emin",mesaj:"atatürk",foto:"fotos/emin.jpg"},
+ hashüs:{ad:"Hashüs",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
+ bünyamin:{ad:"Bünyamin",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
+ efsa:{ad:"Efsa",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
+ merve:{ad:"Merve",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
+ cilo:{ad:"Cilo",mesaj:"godfather",foto:"fotos/cilo.jpg"},
+ emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
+ yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
+};
 
-/* ===== FIREBASE ONLINE (YENİ) ===== */
-function firebaseOnline(username){
-  const userRef=ref(window.db,"status/"+username);
-  const connectedRef=ref(window.db,".info/connected");
+let aktif="";
 
-  onValue(connectedRef,(snap)=>{
-    if(snap.val()){
-      onDisconnect(userRef).set({
-        name:username,
-        state:"offline",
-        last_seen:Date.now()
-      });
-      set(userRef,{
-        name:username,
-        state:"online",
-        last_seen:Date.now()
-      });
-    }
-  });
-}
-
-function startStatusListener(){
-  if(statusListening) return;
-  statusListening=true;
-
-  const statusRef=ref(window.db,"status");
-  onValue(statusRef,(snap)=>{
-    const data=snap.val()||{};
-    onlineList.innerHTML=Object.values(data)
-      .filter(u=>u.state==="online")
-      .map(u=>"🟢 "+u.name)
-      .join("<br>");
-  });
-}
-
-/* ===== LOGIN AYNI ===== */
 function giris(){
-  if(!window.db){
-    loginHata.textContent="Firebase yükleniyor...";
-    return;
+ const k=kullanici.value.toLowerCase().trim();
+ if(users[k]&&users[k].sifre===sifre.value){
+  aktif=k;
+  loginBox.classList.add("hidden");
+  panel.classList.remove("hidden");
+  hosgeldin.textContent="Hoşgeldin "+k;
+  firebaseOnline(k);
+
+  if(users[k].rol==="admin"){
+   adminPanel.classList.remove("hidden");
+   sifreUserSelect.innerHTML=Object.keys(users)
+    .filter(u=>u!=="admin")
+    .map(u=>`<option>${u}</option>`).join("");
+   startStatusListener();
   }
-
-  const k=kullanici.value.toLowerCase().trim();
-  if(users[k]&&users[k].sifre===sifre.value){
-    aktifKullanici=k;
-    loginBox.classList.add("hidden");
-    panel.classList.remove("hidden");
-    hosgeldin.textContent="Hoşgeldin "+k.toUpperCase();
-
-    firebaseOnline(k);
-
-    if(users[k].rol==="admin"){
-      adminPanel.classList.remove("hidden");
-      sifreUserSelect.innerHTML=Object.keys(users)
-        .filter(u=>u!=="admin")
-        .map(u=>`<option>${u}</option>`).join("");
-      startStatusListener();
-    }
-  }else{
-    loginHata.textContent="Hatalı giriş";
-    errorSound.play();
-  }
+ }else loginHata.textContent="Hatalı giriş";
 }
 
 function cikis(){
-  if(aktifKullanici){
-    const userRef=ref(window.db,"status/"+aktifKullanici);
-    onDisconnect(userRef).cancel();
-    set(userRef,{
-      name:aktifKullanici,
-      state:"offline",
-      last_seen:Date.now()
-    });
-  }
-  aktifKullanici="";
-  panel.classList.add("hidden");
-  adminPanel.classList.add("hidden");
-  loginBox.classList.remove("hidden");
+ if(aktif){
+  const r=ref(db,"status/"+aktif);
+  set(r,{name:aktif,state:"offline",last:Date.now()});
+ }
+ location.reload();
 }
 
-function toggleSection(id){document.getElementById(id).classList.toggle("hidden");}
-function darkMode(){document.body.classList.toggle("dark");}
-
-/* ===== KISILER (DOKUNULMADI) ===== */
-const kisiler={
-  küpra:{ad:"Küpra",mesaj:"hafif",foto:"fotos/küpra.jpg"},
-  yusuf:{ad:"Yusuf",mesaj:"ırkçı",foto:"fotos/yusuf.jpg"},
-  beyza:{ad:"Beyza",mesaj:"egoist sıçan",foto:"fotos/beyza.jpg"},
-  enes:{ad:"Enes",mesaj:"kkaahhppee",foto:"fotos/enes.jpg"},
-  hira:{ad:"Hira",mesaj:"beyinsiz",foto:"fotos/hira.jpg"},
-  hacer:{ad:"Hacer",mesaj:"erkek",foto:"fotos/hacer.jpg"},
-  deniz:{ad:"Deniz",mesaj:"taklitman",foto:"fotos/deniz.jpg"},
-  efe:{ad:"Efe",mesaj:"yaşıyor",foto:"fotos/efe.jpg"},
-  ayhan:{ad:"Ayhan",mesaj:"gergin adam",foto:"fotos/ayhan.jpg"},
-  dilber:{ad:"Dilber",mesaj:"şevvalin50tonu",foto:"fotos/dilber.jpg"},
-  samet:{ad:"Samet",mesaj:"başkan",foto:"fotos/samet.jpg"},
-  ipek:{ad:"İpek",mesaj:"gergedan",foto:"fotos/ipek.jpg"},
-  esma:{ad:"Esma",mesaj:"umrede",foto:"fotos/esma.jpg"},
-  sude:{ad:"Sude",mesaj:"gözlük yokki",foto:"fotos/sude.jpg"},
-  cehennet:{ad:"Cehennet",mesaj:"depremci",foto:"fotos/cehennet.jpg"},
-  berke:{ad:"Berke",mesaj:"kas kütlesi",foto:"fotos/berke.jpg"},
-  emin:{ad:"Emin",mesaj:"atatürk",foto:"fotos/emin.jpg"},
-  hashüs:{ad:"Hashüs",mesaj:"ineğin kalçası",foto:"fotos/hashüs.jpg"},
-  bünyamin:{ad:"Bünyamin",mesaj:"bilekkıran",foto:"fotos/bünyamin.jpg"},
-  efsa:{ad:"Efsa",mesaj:"başkaniye",foto:"fotos/efsa.jpg"},
-  merve:{ad:"Merve",mesaj:"efsanın elli tonu",foto:"fotos/merve.jpg"},
-  cilo:{ad:"Cilo",mesaj:"godfather",foto:"fotos/cilo.jpg"},
-  emre:{ad:"Emre",mesaj:"bıyıklı",foto:"fotos/emre.jpg"},
-  yiğit:{ad:"Yiğit",mesaj:"bjkci",foto:"fotos/yiğit.jpg"}
+searchBtn.onclick=()=>{
+ const k=arama.value.toLowerCase().trim();
+ if(!kisiler[k]) return sonuc.textContent="Bulunamadı";
+ const x=kisiler[k];
+ ad.textContent=x.ad;
+ sonuc.textContent=x.mesaj;
+ sonucFoto.src=x.foto;
+ sonucFoto.style.display="block";
+ setTimeout(()=>sonucFoto.classList.add("show"),10);
+ logla(k);
 };
+
+function logla(a){
+ const l=JSON.parse(localStorage.getItem("logs"))||[];
+ l.push({u:aktif,a,t:new Date().toLocaleString()});
+ localStorage.setItem("logs",JSON.stringify(l));
+ guncelleAdmin();
+}
+
+function guncelleAdmin(){
+ if(users[aktif]?.rol!=="admin")return;
+ const l=JSON.parse(localStorage.getItem("logs"))||[];
+ loglar.innerHTML=l.map(x=>`${x.u} → ${x.a} (${x.t})`).reverse().join("<br>");
+ const s={}; l.forEach(x=>s[x.a]=(s[x.a]||0)+1);
+ istatistik.innerHTML=Object.entries(s).map(x=>`${x[0]} : ${x[1]}`).join("<br>");
+}
+
+function degistirSifre(){
+ const u=sifreUserSelect.value;
+ users[u].sifre=yeniSifre.value;
+ localStorage.setItem("users",JSON.stringify(users));
+ sifreHata.textContent="Şifre değişti";
+}
+
+function toggle(id){document.getElementById(id).classList.toggle("hidden")}
 </script>
 
 <script type="module">
@@ -252,32 +195,40 @@ import { getDatabase, ref, set, onValue, onDisconnect }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig={
-  apiKey:"AIzaSyD36TC6n4kR6wBoiownR7L2iCQyBrAwq1k",
-  authDomain:"a-79192.firebaseapp.com",
-  databaseURL:"https://a-79192-default-rtdb.firebaseio.com",
-  projectId:"a-79192",
-  storageBucket:"a-79192.firebasestorage.app",
-  messagingSenderId:"29833951990",
-  appId:"1:29833951990:web:36cda4e2ce8fb9ef4b4ad7"
+ apiKey:"AIzaSyD36TC6n4kR6wBoiownR7L2iCQyBrAwq1k",
+ authDomain:"a-79192.firebaseapp.com",
+ databaseURL:"https://a-79192-default-rtdb.firebaseio.com",
+ projectId:"a-79192",
+ storageBucket:"a-79192.firebasestorage.app",
+ messagingSenderId:"29833951990",
+ appId:"1:29833951990:web:36cda4e2ce8fb9ef4b4ad7"
 };
 
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
-
 window.db=db;
-window.ref=ref;
-window.set=set;
-window.onValue=onValue;
-window.onDisconnect=onDisconnect;
-</script>
 
-<!--
-<script>
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw.js");
-}
+window.firebaseOnline=(u)=>{
+ const r=ref(db,"status/"+u);
+ const c=ref(db,".info/connected");
+ onValue(c,s=>{
+  if(s.val()){
+   onDisconnect(r).set({name:u,state:"offline",last:Date.now()});
+   set(r,{name:u,state:"online",last:Date.now()});
+  }
+ });
+};
+
+window.startStatusListener=()=>{
+ const r=ref(db,"status");
+ onValue(r,s=>{
+  onlineDiv.innerHTML=Object.values(s.val()||{})
+   .filter(x=>x.state==="online")
+   .map(x=>"🟢 "+x.name)
+   .join("<br>");
+ });
+};
 </script>
--->
 
 </body>
 </html>
