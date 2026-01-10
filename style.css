@@ -293,5 +293,10 @@ body.dark {
 .logout-btn:hover{
   background:#c0392b;
 }
+.search-box,
+.search-box * {
+  pointer-events: auto;
+}
+
 
 
