@@ -180,47 +180,52 @@ function logEkle(m){
 }
 
 function adminGuncelle(){
-  onlineList.innerHTML=Object.keys(onlineUsers).map(u=>"🟢 "+u).join("<br>");
-  loglar.innerHTML=logKayit.map(l=>"<p>"+l+"</p>").join("");
-  istatistik.innerHTML=Object.keys(aramaSayac).map(k=>{
-    return Object.keys(aramaSayac[k]).map(h=>{
-      return `<p>${k} → ${h}: ${aramaSayac[k][h]}</p>`;
-    }).join("");
-  }).join("");
+  const statusRef = ref(window.db, "status");
+
+  onValue(statusRef, (snap) => {
+    const data = snap.val() || {};
+    onlineList.innerHTML = Object.values(data)
+      .filter(u => u.state === "online")
+      .map(u => "🟢 " + u.name)
+      .join("<br>");
+  });
+}
+
 
   aramaDetayDiv.innerHTML=Object.keys(aramaDetay).map(u=>{
     return `<h4>${u}</h4>`+aramaDetay[u].map(d=>`<p>→ ${d.hedef} | ${d.zaman}</p>`).join("");
   }).join("");
 }
 
-function giris()
-if(users[k] && users[k].sifre === sifre.value){
-  aktifKullanici = k;
+function giris(){
+  const k = kullanici.value.toLowerCase().trim();
 
-  firebaseOnline(k); // 🔥 BU SATIR ŞART
-{
-  const k=kullanici.value.toLowerCase().trim();
-  if(users[k]&&users[k].sifre===sifre.value){
-    aktifKullanici=k;
-    localStorage.setItem("aktifKullanici",k);
+  if(users[k] && users[k].sifre === sifre.value){
+    aktifKullanici = k;
+    localStorage.setItem("aktifKullanici", k);
 
     loginBox.classList.add("hidden");
     panel.classList.remove("hidden");
-    hosgeldin.textContent="Hoşgeldin "+k.toUpperCase();
+    hosgeldin.textContent = "Hoşgeldin " + k.toUpperCase();
 
-    onlineUsers[k]=true;
-    logEkle("🔐 "+k+" giriş yaptı");
+    firebaseOnline(k); // 🔥 KULLANICI ONLINE
 
-    if(users[k].rol==="admin"){
+    logEkle("🔐 " + k + " giriş yaptı");
+
+    if(users[k].rol === "admin"){
       adminPanel.classList.remove("hidden");
-      sifreUserSelect.innerHTML=Object.keys(users).filter(u=>u!=="admin").map(u=>`<option>${u}</option>`).join("");
+      sifreUserSelect.innerHTML = Object.keys(users)
+        .filter(u => u !== "admin")
+        .map(u => `<option>${u}</option>`)
+        .join("");
       adminGuncelle();
     }
-  }else{
-    loginHata.textContent="Hatalı giriş";
+  } else {
+    loginHata.textContent = "Hatalı giriş";
     errorSound.play();
   }
 }
+
 
 function cikis(){
   delete onlineUsers[aktifKullanici];
@@ -345,25 +350,6 @@ import {
   onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyD36TC6n4kR6wBoiownR7L2iCQyBrAwq1k",
-  authDomain: "a-79192.firebaseapp.com",
-  databaseURL: "https://a-79192-default-rtdb.firebaseio.com",
-  projectId: "a-79192",
-  storageBucket: "a-79192.firebasestorage.app",
-  messagingSenderId: "29833951990",
-  appId: "1:29833951990:web:36cda4e2ce8fb9ef4b4ad7"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.db = db;
-window.ref = ref;
-window.set = set;
-window.onValue = onValue;
-window.onDisconnect = onDisconnect;
-</script>
 
 </body>
 </html>
