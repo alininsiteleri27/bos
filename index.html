@@ -193,7 +193,12 @@ function adminGuncelle(){
   }).join("");
 }
 
-function giris(){
+function giris()
+if(users[k] && users[k].sifre === sifre.value){
+  aktifKullanici = k;
+
+  firebaseOnline(k); // 🔥 BU SATIR ŞART
+{
   const k=kullanici.value.toLowerCase().trim();
   if(users[k]&&users[k].sifre===sifre.value){
     aktifKullanici=k;
